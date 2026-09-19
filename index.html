@@ -1013,6 +1013,8 @@
   #acessibilidade:active { transform: scale(0.96); }
   #acessibilidade svg { width: 22px; height: 22px; }
 
+  #vlibras-widget [vw-access-button] { display: none !important; }
+
   /* ============================================================ */
   /* =================== RESPONSIVIDADE ========================= */
   /* ============================================================ */
@@ -1401,10 +1403,10 @@
   });
 
   document.getElementById('acessibilidade').addEventListener('click', function() {
-    const el = document.documentElement;
-    const cur = el.style.fontSize || '16px';
-    el.style.fontSize = (parseFloat(cur) >= 18 ? '16px' : '18px');
-    this.setAttribute('aria-expanded', el.style.fontSize === '18px');
+    const vlibrasButton = document.querySelector('#vlibras-widget [vw-access-button]');
+    if (vlibrasButton) vlibrasButton.click();
+    const expanded = this.getAttribute('aria-expanded') === 'true';
+    this.setAttribute('aria-expanded', String(!expanded));
   });
 
   function setStatus(msg, isErr) {
@@ -1768,6 +1770,17 @@
     return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   }
 })();
+</script>
+
+<div id="vlibras-widget" vw class="enabled">
+  <div vw-access-button class="active"></div>
+  <div vw-plugin-wrapper>
+    <div class="vw-plugin-top-wrapper"></div>
+  </div>
+</div>
+<script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+<script>
+  new window.VLibras.Widget('https://vlibras.gov.br/app');
 </script>
 </body>
 </html>

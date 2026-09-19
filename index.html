@@ -1014,6 +1014,7 @@
   #acessibilidade svg { width: 22px; height: 22px; }
 
   #vlibras-widget [vw-access-button] { display: none !important; }
+  #vlibras-access-wrapper { display: none !important; }
 
   /* ============================================================ */
   /* =================== RESPONSIVIDADE ========================= */
@@ -1403,10 +1404,11 @@
   });
 
   document.getElementById('acessibilidade').addEventListener('click', function() {
-    const vlibrasButton = document.querySelector('#vlibras-widget [vw-access-button]');
-    if (vlibrasButton) vlibrasButton.click();
-    const expanded = this.getAttribute('aria-expanded') === 'true';
-    this.setAttribute('aria-expanded', String(!expanded));
+    const widget = window.VLibrasWidget;
+    if (widget && typeof widget.open === 'function') {
+      widget.open();
+      this.setAttribute('aria-expanded', 'true');
+    }
   });
 
   function setStatus(msg, isErr) {

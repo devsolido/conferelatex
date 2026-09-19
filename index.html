@@ -16,7 +16,6 @@
 
 <style>
   :root {
-    /* Paleta institucional IFPA */
     --brand-green: #0f3d2e;
     --brand-green-2: #116943;
     --brand-green-3: #1a8a58;
@@ -30,10 +29,12 @@
     --surface: #ffffff;
     --surface-soft: #f5f7f5;
     --surface-tint: #eef3ef;
+    --surface-deep: #e6ebe7;
     --border: #dfe6e1;
     --border-strong: #c7d2cb;
 
     --pass: #116943;
+    --pass-bright: #1a8a58;
     --pass-soft: #e6f4ec;
     --fail: #b23a2c;
     --fail-soft: #fbebe8;
@@ -42,7 +43,9 @@
 
     --shadow-card: 0 1px 2px rgba(15,61,46,0.04), 0 4px 16px -8px rgba(15,61,46,0.10);
     --shadow-hover: 0 2px 4px rgba(15,61,46,0.06), 0 12px 32px -12px rgba(15,61,46,0.18);
+    --shadow-lift: 0 4px 8px rgba(15,61,46,0.06), 0 20px 48px -20px rgba(15,61,46,0.25);
     --gradient-primary: linear-gradient(135deg, var(--brand-green-2), var(--brand-green));
+    --gradient-pass: linear-gradient(135deg, var(--pass-bright), var(--pass));
 
     --font-serif: 'Barlow Condensed', 'Georgia', serif;
     --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -62,11 +65,9 @@
     text-rendering: optimizeLegibility;
   }
 
-  body {
-    padding-bottom: env(safe-area-inset-bottom);
-  }
+  body { padding-bottom: env(safe-area-inset-bottom); }
 
-  /* ============ HEADER ============ */
+  /* ============ TOPBAR ============ */
   .topbar {
     border-bottom: 1px solid var(--border);
     position: sticky;
@@ -196,12 +197,18 @@
       radial-gradient(700px 400px at -10% 110%, rgba(201,162,74,0.08), transparent 55%),
       var(--surface);
     border-bottom: 1px solid var(--border);
+    transition: padding 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
   }
+
+  .hero.compact .hero-inner { padding: 28px 24px 24px; }
+  .hero.compact .lede { display: none; }
+  .hero.compact h1 { font-size: clamp(24px, 3.4vw, 34px); margin-bottom: 8px; }
 
   .hero-inner {
     max-width: 1100px;
     margin: 0 auto;
     padding: 48px 24px 40px;
+    transition: padding 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
   }
 
   .eyebrow {
@@ -232,6 +239,7 @@
     margin: 0 0 16px;
     color: var(--ink);
     max-width: 780px;
+    transition: font-size 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
   }
 
   h1 .accent {
@@ -279,6 +287,15 @@
     color: var(--ink-muted);
     box-shadow: 0 1px 0 rgba(15,61,46,0.04);
     margin-bottom: 28px;
+    transition: opacity 0.3s ease, margin 0.3s ease, transform 0.3s ease;
+  }
+
+  .meta-strip.hidden {
+    opacity: 0;
+    margin: 0;
+    transform: translateY(-8px);
+    pointer-events: none;
+    display: none;
   }
 
   .meta-strip .item {
@@ -313,9 +330,20 @@
     padding: 48px 28px;
     text-align: center;
     cursor: pointer;
-    transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+    transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
     background: var(--surface);
     position: relative;
+    overflow: hidden;
+  }
+
+  .dropzone.hidden {
+    opacity: 0;
+    transform: scale(0.96) translateY(-8px);
+    height: 0;
+    padding: 0;
+    margin: 0;
+    border: none;
+    pointer-events: none;
     overflow: hidden;
   }
 
@@ -386,61 +414,100 @@
     color: var(--ink-muted);
     min-height: 20px;
     text-align: center;
-    transition: color 0.2s ease;
+    transition: color 0.2s ease, opacity 0.3s ease;
   }
 
   .status-line.err { color: var(--fail); }
+  .status-line.hidden { opacity: 0; }
 
   /* ============ REPORT ============ */
-  #report { display: none; margin-top: 40px; }
-  #report.show { display: block; animation: reportIn 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+  #report { display: none; }
+  #report.show { display: block; animation: reportIn 0.55s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
 
   @keyframes reportIn {
-    from { opacity: 0; transform: translateY(12px); }
+    from { opacity: 0; transform: translateY(16px); }
     to { opacity: 1; transform: translateY(0); }
   }
 
-  .sheet-head {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 32px;
+  /* Botão voltar */
+  .back-btn {
+    display: inline-flex;
     align-items: center;
-    padding: 32px;
+    gap: 8px;
+    padding: 9px 16px;
+    border-radius: 8px;
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+    margin-bottom: 24px;
+  }
+
+  .back-btn:hover {
+    border-color: var(--brand-green-2);
+    background: var(--surface-tint);
+    transform: translateX(-2px);
+  }
+
+  .back-btn svg { width: 15px; height: 15px; }
+
+  /* ============ RESUMO (hero do resultado) ============ */
+  .summary {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 36px;
+    align-items: center;
+    padding: 36px;
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 14px;
-    margin-bottom: 32px;
-    box-shadow: var(--shadow-card);
+    border-radius: 18px;
+    margin-bottom: 36px;
+    box-shadow: var(--shadow-lift);
     position: relative;
     overflow: hidden;
   }
 
-  .sheet-head::before {
+  .summary::before {
     content: '';
     position: absolute;
     top: 0; left: 0; right: 0;
-    height: 3px;
-    background: var(--gradient-primary);
+    height: 4px;
+    background: var(--gradient-pass);
   }
 
-  .stamp-wrap { flex: 0 0 auto; }
+  .summary::after {
+    content: '';
+    position: absolute;
+    top: -80px; right: -80px;
+    width: 260px; height: 260px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(17,105,67,0.06), transparent 70%);
+    pointer-events: none;
+  }
+
+  .stamp-wrap { flex: 0 0 auto; position: relative; z-index: 1; }
 
   .stamp {
-    width: 148px; height: 148px;
-    filter: drop-shadow(0 6px 16px rgba(15,61,46,0.12));
+    width: 168px; height: 168px;
+    filter: drop-shadow(0 10px 24px rgba(15,61,46,0.15));
   }
 
   .stamp .ring-bg { stroke: var(--border); }
   .stamp .ring-fg {
     stroke-dashoffset: var(--dash-full);
-    animation: stampFill 1.4s cubic-bezier(0.4, 0, 0.2, 1) 0.25s forwards;
+    animation: stampFill 1.6s cubic-bezier(0.4, 0, 0.2, 1) 0.25s forwards;
   }
   @keyframes stampFill { to { stroke-dashoffset: var(--dash-target); } }
 
   .stamp .score-num {
     font-family: var(--font-serif);
     font-weight: 700;
-    font-size: 34px;
+    font-size: 44px;
     letter-spacing: -0.02em;
   }
   .stamp .score-den {
@@ -451,26 +518,30 @@
   }
   .stamp .score-label {
     font-family: var(--font-mono);
-    font-weight: 600;
-    letter-spacing: 0.2em;
-    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 0.24em;
+    font-size: 9px;
   }
 
-  .sheet-meta { padding-top: 4px; }
+  .summary-meta { position: relative; z-index: 1; min-width: 0; }
 
-  .sheet-file {
+  .summary-file {
     font-family: var(--font-mono);
     font-size: 12px;
     color: var(--ink-subtle);
     letter-spacing: 0.02em;
     word-break: break-all;
-    margin-bottom: 12px;
-    display: flex;
+    margin-bottom: 14px;
+    display: inline-flex;
     align-items: center;
     gap: 8px;
+    padding: 5px 10px;
+    background: var(--surface-tint);
+    border-radius: 6px;
+    border: 1px solid var(--border);
   }
 
-  .sheet-file::before {
+  .summary-file::before {
     content: '';
     width: 6px; height: 6px;
     border-radius: 50%;
@@ -478,96 +549,163 @@
     flex: 0 0 auto;
   }
 
-  .sheet-verdict {
+  .summary-verdict {
     font-family: var(--font-serif);
-    font-size: clamp(20px, 2.6vw, 26px);
+    font-size: clamp(22px, 3vw, 30px);
     font-weight: 600;
-    line-height: 1.25;
+    line-height: 1.2;
     letter-spacing: -0.01em;
     color: var(--ink);
-    max-width: 42ch;
-    margin-bottom: 12px;
+    margin: 0 0 12px;
+    max-width: 44ch;
   }
 
-  .sheet-note {
+  .summary-verdict .pos { color: var(--pass-bright); }
+  .summary-verdict .neu { color: var(--warn); }
+  .summary-verdict .neg { color: var(--fail); }
+
+  .summary-note {
     font-size: 13px;
     line-height: 1.6;
     color: var(--ink-subtle);
     max-width: 52ch;
+    margin: 0;
   }
 
-  /* ============ BLOCKS ============ */
-  section.block { margin-bottom: 32px; }
+  /* Barra de progresso horizontal do total */
+  .summary-bar-wrap {
+    position: relative;
+    z-index: 1;
+    text-align: right;
+    min-width: 140px;
+  }
+
+  .summary-bar-label {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--ink-subtle);
+    margin-bottom: 8px;
+  }
+
+  .summary-bar-pct {
+    font-family: var(--font-serif);
+    font-size: 40px;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--brand-green-2);
+    margin-bottom: 8px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .summary-bar-pct span { font-size: 22px; color: var(--ink-subtle); font-weight: 500; }
+
+  .summary-bar {
+    height: 6px;
+    background: var(--surface-tint);
+    border-radius: 6px;
+    overflow: hidden;
+    width: 140px;
+    margin-left: auto;
+  }
+
+  .summary-bar-fill {
+    height: 100%;
+    border-radius: 6px;
+    background: var(--gradient-pass);
+    width: 0;
+    transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1) 0.3s;
+  }
+
+  /* ============ BLOCOS ============ */
+  section.block { margin-bottom: 40px; }
 
   .block-head {
     display: flex;
     align-items: baseline;
     justify-content: space-between;
     gap: 12px;
-    padding-bottom: 12px;
-    margin-bottom: 4px;
-    border-bottom: 1px solid var(--border);
+    padding-bottom: 14px;
+    margin-bottom: 18px;
+    border-bottom: 1.5px solid var(--border);
     position: relative;
   }
 
   .block-head::after {
     content: '';
     position: absolute;
-    bottom: -1px; left: 0;
-    width: 40px; height: 2.5px;
+    bottom: -1.5px; left: 0;
+    width: 48px; height: 3px;
     background: var(--brand-green-2);
     border-radius: 2px;
   }
 
   .block-title {
     font-family: var(--font-serif);
-    font-size: 22px;
+    font-size: 24px;
     font-weight: 600;
     color: var(--ink);
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 14px;
     letter-spacing: -0.01em;
   }
 
   .block-num {
     font-family: var(--font-mono);
     font-size: 11px;
-    font-weight: 600;
+    font-weight: 700;
     color: var(--brand-green-2);
     letter-spacing: 0.1em;
-    padding: 3px 8px;
-    border: 1px solid var(--border-strong);
-    border-radius: 6px;
+    padding: 4px 9px;
+    border: 1.5px solid var(--border-strong);
+    border-radius: 7px;
     background: var(--surface);
   }
 
   .block-score {
     font-family: var(--font-mono);
-    font-size: 12.5px;
-    color: var(--ink-muted);
+    font-size: 13px;
+    color: var(--ink);
     white-space: nowrap;
     letter-spacing: 0.02em;
-    font-weight: 500;
+    font-weight: 600;
+    padding: 5px 12px;
+    background: var(--surface-tint);
+    border: 1px solid var(--border);
+    border-radius: 999px;
   }
 
-  /* ============ ROWS ============ */
+  /* ============ ROWS (estrutura, tabela, lista) ============ */
+  .rows-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow-card);
+  }
+
   .row {
     display: flex;
     align-items: flex-start;
-    gap: 12px;
-    padding: 14px 0;
+    gap: 14px;
+    padding: 16px 20px;
     border-bottom: 1px solid var(--border);
-    font-size: 13.5px;
+    font-size: 14px;
+    transition: background 0.15s ease;
   }
   .row:last-child { border-bottom: none; }
+  .row:hover { background: var(--surface-soft); }
 
   .mark {
-    flex: 0 0 20px;
-    width: 20px; height: 20px;
+    flex: 0 0 22px;
+    width: 22px; height: 22px;
     border-radius: 50%;
-    font-size: 11px;
-    line-height: 20px;
+    font-size: 12px;
+    line-height: 22px;
     text-align: center;
     font-weight: 700;
     margin-top: 1px;
@@ -578,32 +716,41 @@
   .row-body { flex: 1; min-width: 0; }
   .row-name {
     font-family: var(--font-mono);
-    font-size: 13px;
+    font-size: 13.5px;
     color: var(--ink);
-    font-weight: 500;
+    font-weight: 600;
   }
   .row-detail {
     font-family: var(--font-sans);
     color: var(--ink-muted);
     font-size: 13px;
-    margin-top: 3px;
+    margin-top: 4px;
     line-height: 1.55;
   }
 
   /* ============ SEÇÕES ============ */
+  .secoes-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow-card);
+  }
+
   .secao {
-    padding: 20px 0;
+    padding: 22px 24px;
     border-bottom: 1px solid var(--border);
     position: relative;
   }
   .secao:last-child { border-bottom: none; }
+  .secao:hover { background: var(--surface-soft); }
 
   .secao-head {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 14px;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
     flex-wrap: wrap;
   }
 
@@ -617,7 +764,7 @@
 
   .secao-nome .arquivo {
     font-family: var(--font-mono);
-    font-size: 13.5px;
+    font-size: 14px;
     color: var(--ink);
     font-weight: 600;
   }
@@ -631,10 +778,10 @@
   .secao-score {
     font-family: var(--font-mono);
     font-size: 12px;
-    font-weight: 600;
+    font-weight: 700;
     white-space: nowrap;
-    padding: 4px 10px;
-    border-radius: 6px;
+    padding: 5px 11px;
+    border-radius: 999px;
     letter-spacing: 0.02em;
   }
   .secao-score.ok { color: var(--pass); background: var(--pass-soft); }
@@ -642,20 +789,20 @@
   .secao-score.no { color: var(--fail); background: var(--fail-soft); }
 
   .secao-bar {
-    height: 4px;
+    height: 5px;
     background: var(--surface-tint);
-    border-radius: 4px;
+    border-radius: 5px;
     overflow: hidden;
     margin-bottom: 14px;
   }
 
   .secao-bar-fill {
     height: 100%;
-    border-radius: 4px;
+    border-radius: 5px;
     transition: width 0.9s cubic-bezier(0.4, 0, 0.2, 1);
     width: 0;
   }
-  .secao-bar-fill.ok { background: var(--gradient-primary); }
+  .secao-bar-fill.ok { background: var(--gradient-pass); }
   .secao-bar-fill.mid { background: linear-gradient(90deg, var(--warn), #d9a53e); }
   .secao-bar-fill.no { background: var(--fail); }
 
@@ -663,7 +810,7 @@
     font-family: var(--font-sans);
     font-size: 12.5px;
     color: var(--ink-subtle);
-    margin-bottom: 12px;
+    margin-bottom: 14px;
     display: flex;
     align-items: center;
     gap: 8px;
@@ -673,44 +820,55 @@
   .meta-chip {
     font-family: var(--font-mono);
     font-size: 11px;
-    padding: 3px 8px;
+    padding: 3px 9px;
     border-radius: 5px;
     background: var(--surface-tint);
     border: 1px solid var(--border);
     color: var(--ink-muted);
+    font-weight: 500;
   }
 
   .crit-list {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 9px;
   }
 
   .crit {
     display: flex;
     align-items: flex-start;
-    gap: 10px;
-    font-size: 13px;
+    gap: 11px;
+    font-size: 13.5px;
     line-height: 1.55;
+    padding: 10px 12px;
+    border-radius: 8px;
+    background: var(--surface-soft);
+    transition: background 0.15s ease;
   }
 
+  .crit.ok { background: var(--pass-soft); }
+  .crit.no { background: var(--fail-soft); }
+
   .crit .mark {
-    flex: 0 0 16px;
-    width: 16px; height: 16px;
-    font-size: 10px;
-    line-height: 16px;
-    margin-top: 2px;
+    flex: 0 0 18px;
+    width: 18px; height: 18px;
+    font-size: 11px;
+    line-height: 18px;
+    margin-top: 1px;
   }
 
   .crit .txt { color: var(--ink-muted); font-family: var(--font-sans); }
-  .crit .txt b { color: var(--ink); font-weight: 600; font-family: var(--font-mono); font-size: 12.5px; }
+  .crit.ok .txt { color: var(--pass); }
+  .crit.no .txt { color: var(--fail); }
+  .crit .txt b { color: var(--ink); font-weight: 700; font-family: var(--font-mono); font-size: 12.5px; }
   .crit .txt code {
     font-family: var(--font-mono);
     font-size: 12px;
     color: var(--brand-green-2);
-    background: var(--surface-tint);
-    padding: 1px 5px;
-    border-radius: 3px;
+    background: var(--surface);
+    padding: 1.5px 6px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
   }
 
   /* ============ FOOTER ============ */
@@ -725,33 +883,6 @@
   }
 
   footer.foot strong { color: var(--ink-muted); font-weight: 600; }
-
-  .reset-btn {
-    margin-top: 24px;
-    background: var(--surface);
-    border: 1px solid var(--border-strong);
-    color: var(--ink);
-    font-family: var(--font-sans);
-    font-size: 13px;
-    font-weight: 600;
-    letter-spacing: 0.02em;
-    padding: 12px 22px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .reset-btn:hover {
-    border-color: var(--brand-green-2);
-    background: var(--surface-tint);
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-card);
-  }
-
-  .reset-btn svg { width: 15px; height: 15px; }
 
   /* ============ ACESSIBILIDADE ============ */
   #acessibilidade {
@@ -773,21 +904,30 @@
   #acessibilidade svg { width: 22px; height: 22px; }
 
   /* ============ RESPONSIVO ============ */
+  @media (max-width: 820px) {
+    .summary {
+      grid-template-columns: 1fr;
+      gap: 24px;
+      padding: 28px 24px;
+      text-align: center;
+    }
+    .stamp-wrap { justify-self: center; }
+    .stamp { width: 140px; height: 140px; }
+    .summary-file { justify-content: center; }
+    .summary-bar-wrap { text-align: center; }
+    .summary-bar { margin: 0 auto; }
+  }
+
   @media (max-width: 700px) {
     .hero-inner { padding: 36px 20px 32px; }
     main { padding: 24px 20px 60px; }
-    .sheet-head {
-      grid-template-columns: 1fr;
-      gap: 22px;
-      padding: 24px;
-    }
-    .stamp-wrap { justify-self: center; }
-    .stamp { width: 128px; height: 128px; }
-    .block-title { font-size: 19px; }
+    .block-title { font-size: 20px; }
     .meta-strip { gap: 10px 16px; font-size: 12px; }
     .meta-strip .sep { display: none; }
     .topbar-actions .status-pill { display: none; }
     .clock { font-size: 11px; padding: 5px 10px; }
+    .secao { padding: 18px 18px; }
+    .row { padding: 14px 16px; }
   }
 
   a { color: var(--brand-green-2); text-decoration: none; }
@@ -821,7 +961,7 @@
   </div>
 </header>
 
-<section class="hero">
+<section class="hero" id="hero">
   <div class="hero-inner">
     <div class="eyebrow">Campus Marabá Industrial · Projeto Integrador</div>
     <h1>Conferência de estrutura do <span class="accent">relatório LaTeX</span></h1>
@@ -834,7 +974,7 @@
 </section>
 
 <main>
-  <div class="meta-strip" role="status" aria-live="polite">
+  <div class="meta-strip" id="metaStrip" role="status" aria-live="polite">
     <span class="item">
       <span class="label">Área</span>
       <span class="value">Verificador de Relatório</span>
@@ -903,13 +1043,13 @@
   const input = document.getElementById('fileInput');
   const statusLine = document.getElementById('statusLine');
   const report = document.getElementById('report');
+  const metaStrip = document.getElementById('metaStrip');
+  const hero = document.getElementById('hero');
 
   /* ============ RELÓGIO DO BRASIL (America/Belem) ============ */
   (function initClock() {
     const el = document.getElementById('clock');
     if (!el) return;
-
-    const pad = n => String(n).padStart(2, '0');
 
     const fmt = new Intl.DateTimeFormat('pt-BR', {
       timeZone: 'America/Belem',
@@ -920,7 +1060,6 @@
     });
 
     const tick = () => {
-      // Usa formatToParts para garantir hh:mm:ss independente do locale
       const parts = fmt.formatToParts(new Date());
       const get = t => parts.find(p => p.type === t)?.value ?? '00';
       el.textContent = `${get('hour')}:${get('minute')}:${get('second')}`;
@@ -968,6 +1107,25 @@
 
   function pathSegments(path) { return path.split('/').filter(Boolean); }
 
+  /* ============ MOSTRAR / ESCONDER TELA INICIAL ============ */
+  function hideInitialUI() {
+    dz.classList.add('hidden');
+    metaStrip.classList.add('hidden');
+    statusLine.classList.add('hidden');
+    hero.classList.add('compact');
+  }
+
+  function showInitialUI() {
+    dz.classList.remove('hidden');
+    metaStrip.classList.remove('hidden');
+    statusLine.classList.remove('hidden');
+    hero.classList.remove('compact');
+    report.classList.remove('show');
+    report.innerHTML = '';
+    input.value = '';
+    setStatus('');
+  }
+
   async function handleFile(file) {
     if (!file.name.toLowerCase().endsWith('.zip')) {
       setStatus('Envie um arquivo .zip — esse formato não é aceito.', true);
@@ -981,6 +1139,7 @@
       const buf = await file.arrayBuffer();
       const zip = await JSZip.loadAsync(buf);
       const result = await analyze(zip);
+      hideInitialUI();
       renderReport(file.name, result);
       setStatus('');
     } catch (err) {
@@ -1083,7 +1242,7 @@
   }
 
   function scoreColor(total) {
-    if (total >= 2.3) return getVar('--pass');
+    if (total >= 2.3) return getVar('--pass-bright');
     if (total >= 1.3) return getVar('--warn');
     return getVar('--fail');
   }
@@ -1099,13 +1258,13 @@
     return `
       <svg class="stamp" viewBox="0 0 132 132" role="img" aria-label="Pontuação ${total.toFixed(2)} de ${max.toFixed(2)}"
            style="--dash-full:${c}; --dash-target:${dashTarget};">
-        <circle class="ring-bg" cx="66" cy="66" r="${r}" fill="none" stroke-width="4"></circle>
-        <circle class="ring-fg" cx="66" cy="66" r="${r}" fill="none" stroke="${color}" stroke-width="4"
+        <circle class="ring-bg" cx="66" cy="66" r="${r}" fill="none" stroke-width="5"></circle>
+        <circle class="ring-fg" cx="66" cy="66" r="${r}" fill="none" stroke="${color}" stroke-width="5"
           stroke-dasharray="${c}" stroke-linecap="round"
           transform="rotate(-90 66 66)"></circle>
-        <text x="66" y="64" text-anchor="middle" class="score-num" fill="${color}">${total.toFixed(2)}</text>
-        <text x="66" y="84" text-anchor="middle" class="score-den" fill="var(--ink-subtle)">DE ${max.toFixed(2)} PTS</text>
-        <text x="66" y="24" text-anchor="middle" class="score-label" fill="var(--ink-subtle)">SCRIPT</text>
+        <text x="66" y="66" text-anchor="middle" class="score-num" fill="${color}">${total.toFixed(2)}</text>
+        <text x="66" y="88" text-anchor="middle" class="score-den" fill="var(--ink-subtle)">DE ${max.toFixed(2)} PTS</text>
+        <text x="66" y="26" text-anchor="middle" class="score-label" fill="var(--ink-subtle)">SCRIPT</text>
       </svg>`;
   }
 
@@ -1134,8 +1293,8 @@
     if (!info.existe) {
       html += `<div class="secao-detalhe">Arquivo não encontrado dentro da pasta <code style="font-family:var(--font-mono);color:var(--brand-green-2);">secoes/</code>.</div>`;
       html += `<div class="crit-list">
-        <div class="crit"><span class="mark no">✗</span><span class="txt">texto ≥ <b>${MIN_CHARS}</b> caracteres</span></div>
-        <div class="crit"><span class="mark no">✗</span><span class="txt">figura com <code>\\caption</code></span></div>
+        <div class="crit no"><span class="mark no">✗</span><span class="txt">texto ≥ <b>${MIN_CHARS}</b> caracteres</span></div>
+        <div class="crit no"><span class="mark no">✗</span><span class="txt">figura com <code>\\caption</code></span></div>
       </div></div>`;
       return html;
     }
@@ -1147,7 +1306,7 @@
 
     html += `<div class="crit-list">`;
 
-    html += `<div class="crit">
+    html += `<div class="crit ${info.temTexto ? 'ok' : 'no'}">
       <span class="mark ${info.temTexto ? 'ok' : 'no'}">${info.temTexto ? '✓' : '✗'}</span>
       <span class="txt">texto ≥ <b>${MIN_CHARS}</b> caracteres ${
         info.temTexto
@@ -1167,7 +1326,7 @@
     } else {
       figTxt += ' — nenhuma figura encontrada';
     }
-    html += `<div class="crit">
+    html += `<div class="crit ${info.temFigura ? 'ok' : 'no'}">
       <span class="mark ${info.temFigura ? 'ok' : 'no'}">${info.temFigura ? '✓' : '✗'}</span>
       <span class="txt">${figTxt}</span>
     </div>`;
@@ -1177,47 +1336,80 @@
   }
 
   function renderReport(filename, r) {
-    const verdict = r.total >= 2.5
-      ? 'Todos os critérios automáticos foram atendidos.'
-      : r.total === 0
-        ? 'Nenhum critério automático foi atendido ainda — reveja a estrutura do projeto.'
-        : 'Ainda faltam itens para o total de 2,5 pontos verificáveis por script.';
+    const pctTotal = Math.round((r.total / 2.5) * 100);
+
+    let verdictClass, verdictIcon, verdictTxt;
+    if (r.total >= 2.5) {
+      verdictClass = 'pos';
+      verdictTxt = 'Todos os critérios automáticos foram atendidos.';
+    } else if (r.total >= 1.3) {
+      verdictClass = 'neu';
+      verdictTxt = 'Bom progresso — ainda faltam itens para o total de 2,5 pontos.';
+    } else if (r.total > 0) {
+      verdictClass = 'neg';
+      verdictTxt = 'Ainda faltam vários itens para atingir os 2,5 pontos verificáveis.';
+    } else {
+      verdictClass = 'neg';
+      verdictTxt = 'Nenhum critério automático foi atendido — reveja a estrutura do projeto.';
+    }
 
     let html = '';
-    html += `<div class="sheet-head">
+
+    /* Botão voltar */
+    html += `<button class="back-btn" id="backBtn" type="button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <line x1="19" y1="12" x2="5" y2="12"/>
+        <polyline points="12 19 5 12 12 5"/>
+      </svg>
+      Voltar
+    </button>`;
+
+    /* Resumo */
+    html += `<div class="summary">
       <div class="stamp-wrap">${stampSVG(r.total, 2.5)}</div>
-      <div class="sheet-meta">
-        <div class="sheet-file">${escapeHtml(filename)}</div>
-        <div class="sheet-verdict">${verdict}</div>
-        <div class="sheet-note">A Defesa de Autoria (2,5 pts) é avaliada na entrevista e não entra nesta conferência automática.</div>
+      <div class="summary-meta">
+        <div class="summary-file">${escapeHtml(filename)}</div>
+        <h2 class="summary-verdict"><span class="${verdictClass}">${verdictTxt}</span></h2>
+        <p class="summary-note">A Defesa de Autoria (2,5 pts) é avaliada na entrevista e não entra nesta conferência automática.</p>
+      </div>
+      <div class="summary-bar-wrap">
+        <div class="summary-bar-label">Aproveitamento</div>
+        <div class="summary-bar-pct">${pctTotal}<span>%</span></div>
+        <div class="summary-bar"><div class="summary-bar-fill" id="summaryBarFill"></div></div>
       </div>
     </div>`;
 
+    /* Bloco 01 — Estrutura */
     html += `<section class="block">
       <div class="block-head">
         <div class="block-title"><span class="block-num">01</span> Estrutura de arquivos e pastas</div>
         <div class="block-score">${r.pontosEstrutura.toFixed(2)} / 0.50</div>
-      </div>`;
+      </div>
+      <div class="rows-card">`;
     for (const d of r.estruturaDetalhes) {
       html += row(d.ok, d.label, d.detail);
     }
-    html += `</section>`;
+    html += `</div></section>`;
 
+    /* Bloco 02 — Seções */
     html += `<section class="block">
       <div class="block-head">
         <div class="block-title"><span class="block-num">02</span> Texto e figura por seção</div>
         <div class="block-score">${r.pontosFiguras.toFixed(2)} / 1.00</div>
-      </div>`;
+      </div>
+      <div class="secoes-card">`;
     for (const secao of SECOES) {
       html += renderSecao(secao, r.secaoInfo[secao]);
     }
-    html += `</section>`;
+    html += `</div></section>`;
 
+    /* Bloco 03 — Tabela e lista */
     html += `<section class="block">
       <div class="block-head">
         <div class="block-title"><span class="block-num">03</span> Tabela e lista</div>
         <div class="block-score">${r.pontosTabLista.toFixed(2)} / 1.00</div>
-      </div>`;
+      </div>
+      <div class="rows-card">`;
     html += row(r.temTabela, 'Tabela',
       r.temTabela
         ? `encontrada em ${escapeHtml(r.tabelaEm || '—')}`
@@ -1226,36 +1418,29 @@
       r.temLista
         ? `encontrada em ${escapeHtml(r.listaEm || '—')}`
         : 'nenhuma itemize/enumerate encontrada');
-    html += `</section>`;
+    html += `</div></section>`;
 
     html += `<footer class="foot">
       Conferência local no navegador, sem envio de arquivos — mesmos critérios do script de correção automatizada do professor.<br>
       <strong>Antes de enviar pelo SIGAA:</strong> gere o .zip mantendo a estrutura de pastas exata e confira o prazo (27/09/2026, 23:59).
     </footer>`;
 
-    html += `<button class="reset-btn" id="resetBtn" type="button">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <path d="M3 12a9 9 0 1 0 3-6.7L3 8"/>
-        <polyline points="3 3 3 8 8 8"/>
-      </svg>
-      Conferir outro arquivo
-    </button>`;
-
     report.innerHTML = html;
     report.classList.add('show');
 
+    /* Anima as barras após render */
     requestAnimationFrame(() => {
       document.querySelectorAll('.secao-bar-fill').forEach(el => {
         el.style.width = el.getAttribute('data-pct') + '%';
       });
+      const fill = document.getElementById('summaryBarFill');
+      if (fill) fill.style.width = pctTotal + '%';
     });
 
-    document.getElementById('resetBtn').addEventListener('click', () => {
-      report.classList.remove('show');
-      report.innerHTML = '';
-      input.value = '';
-      setStatus('');
-      dz.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    /* Botão voltar */
+    document.getElementById('backBtn').addEventListener('click', () => {
+      showInitialUI();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     });
   }
 

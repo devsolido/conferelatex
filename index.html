@@ -2,306 +2,856 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Conferência de Estrutura — Relatório Técnico LaTeX</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0f3d2e">
+<title>Conferência LaTeX — IFPA Marabá Industrial</title>
+<meta name="description" content="Verificador de estrutura do relatório técnico LaTeX — Projeto Integrador, IFPA Campus Marabá Industrial.">
+<meta name="author" content="IFPA Campus Marabá Industrial">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
 <style>
   :root {
-    box-sizing: border-box;
-    padding-top: env(safe-area-inset-top, 0px);
-    padding-bottom: env(safe-area-inset-bottom, 0px);
+    /* Paleta institucional IFPA */
+    --brand-green: #0f3d2e;
+    --brand-green-2: #116943;
+    --brand-green-3: #1a8a58;
+    --brand-blue: #0b3d91;
+    --brand-gold: #c9a24a;
 
-    --ink-900: #11131a;
-    --ink-800: #171a24;
-    --ink-700: #20242f;
-    --ink-line: #333748;
-    --ink-text: #e7e6df;
-    --ink-text-dim: #9a9db0;
+    --ink: #0d1a14;
+    --ink-muted: #4a5a52;
+    --ink-subtle: #7a8a82;
 
-    --paper: #f4f2ea;
-    --paper-line: #d9d5c5;
-    --paper-text: #201f1a;
-    --paper-text-dim: #6b6858;
+    --surface: #ffffff;
+    --surface-soft: #f5f7f5;
+    --surface-tint: #eef3ef;
+    --border: #dfe6e1;
+    --border-strong: #c7d2cb;
 
-    --pass: #3d7a57;
-    --pass-bg: rgba(61,122,87,0.12);
-    --fail: #a8402f;
-    --fail-bg: rgba(168,64,47,0.10);
-    --gold: #b08a2e;
+    --pass: #116943;
+    --pass-soft: #e6f4ec;
+    --fail: #b23a2c;
+    --fail-soft: #fbebe8;
+    --warn: #a8761f;
+    --warn-soft: #fbf3e0;
 
-    --font-serif: 'Source Serif 4', Georgia, 'Times New Roman', serif;
-    --font-mono: 'IBM Plex Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+    --shadow-card: 0 1px 2px rgba(15,61,46,0.04), 0 4px 16px -8px rgba(15,61,46,0.10);
+    --shadow-hover: 0 2px 4px rgba(15,61,46,0.06), 0 12px 32px -12px rgba(15,61,46,0.18);
+    --gradient-primary: linear-gradient(135deg, var(--brand-green-2), var(--brand-green));
+
+    --font-serif: 'Barlow Condensed', 'Georgia', serif;
+    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-mono: 'IBM Plex Mono', 'SFMono-Regular', Consolas, monospace;
   }
-
-  html { scroll-padding-top: env(safe-area-inset-top, 0px); }
 
   * { box-sizing: border-box; }
 
   html, body {
     margin: 0;
     padding: 0;
-    background: var(--ink-900);
-    color: var(--ink-text);
-    font-family: var(--font-mono);
+    background: var(--surface-soft);
+    color: var(--ink);
+    font-family: var(--font-sans);
     min-height: 100%;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
   }
 
   body {
-    padding: max(28px, env(safe-area-inset-top)) 20px max(40px, env(safe-area-inset-bottom));
+    padding-bottom: env(safe-area-inset-bottom);
   }
 
-  .wrap {
-    max-width: 880px;
+  /* ============ HEADER ============ */
+  .topbar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    backdrop-filter: saturate(1.1) blur(8px);
+    background: rgba(255,255,255,0.92);
+  }
+
+  .topbar-inner {
+    max-width: 1100px;
     margin: 0 auto;
+    padding: 0 24px;
+    height: 68px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
   }
 
-  header.top {
-    margin-bottom: 28px;
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .brand-mark {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    background: var(--gradient-primary);
+    color: #fff;
+    display: grid;
+    place-items: center;
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: 18px;
+    letter-spacing: 0.02em;
+    box-shadow: 0 4px 12px -4px rgba(17,105,67,0.5);
+  }
+
+  .brand-text { line-height: 1.15; }
+  .brand-title {
+    font-family: var(--font-serif);
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--ink);
+    letter-spacing: 0.01em;
+  }
+  .brand-sub {
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--ink-subtle);
+    font-weight: 500;
+  }
+
+  .topbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: var(--pass-soft);
+    color: var(--pass);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+  }
+
+  .status-pill .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--pass);
+    position: relative;
+  }
+  .status-pill .dot::after {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 50%;
+    background: var(--pass);
+    opacity: 0.35;
+    animation: ping 1.8s cubic-bezier(0,0,0.2,1) infinite;
+  }
+  @keyframes ping {
+    0% { transform: scale(0.8); opacity: 0.5; }
+    80%, 100% { transform: scale(2.2); opacity: 0; }
+  }
+
+  /* ============ HERO ============ */
+  .hero {
+    background:
+      radial-gradient(900px 400px at 90% -10%, rgba(17,105,67,0.08), transparent 60%),
+      radial-gradient(700px 400px at -10% 110%, rgba(201,162,74,0.08), transparent 55%),
+      var(--surface);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .hero-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 48px 24px 40px;
   }
 
   .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
     font-family: var(--font-mono);
-    font-size: 12.5px;
-    letter-spacing: 0.02em;
-    color: var(--ink-text-dim);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--brand-green-2);
+    margin-bottom: 18px;
+  }
+
+  .eyebrow::before {
+    content: '';
+    width: 24px; height: 1.5px;
+    background: var(--brand-green-2);
   }
 
   h1 {
     font-family: var(--font-serif);
     font-weight: 600;
-    font-size: clamp(24px, 4vw, 32px);
-    line-height: 1.25;
-    margin: 6px 0 8px;
-    color: var(--ink-text);
-    max-width: 640px;
+    font-size: clamp(32px, 5vw, 52px);
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    margin: 0 0 16px;
+    color: var(--ink);
+    max-width: 780px;
+  }
+
+  h1 .accent {
+    font-style: italic;
+    color: var(--brand-green-2);
+    font-weight: 500;
   }
 
   .lede {
-    font-family: var(--font-serif);
-    font-size: 15.5px;
-    line-height: 1.55;
-    color: var(--ink-text-dim);
-    max-width: 60ch;
+    font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 1.65;
+    color: var(--ink-muted);
+    max-width: 62ch;
+    margin: 0;
   }
 
-  /* --- Drop zone --- */
+  .lede code {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--brand-green-2);
+    background: var(--surface-tint);
+    padding: 2px 7px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+  }
+
+  /* ============ MAIN ============ */
+  main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 32px 24px 80px;
+  }
+
+  .meta-strip {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px 20px;
+    padding: 12px 18px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--surface);
+    font-size: 12.5px;
+    color: var(--ink-muted);
+    box-shadow: 0 1px 0 rgba(15,61,46,0.04);
+    margin-bottom: 28px;
+  }
+
+  .meta-strip .item {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .meta-strip .item .label {
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    font-size: 10.5px;
+    font-weight: 600;
+    color: var(--ink-subtle);
+  }
+
+  .meta-strip .item .value {
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  .meta-strip .sep {
+    width: 1px; height: 14px;
+    background: var(--border);
+  }
+
+  /* ============ DROPZONE ============ */
   .dropzone {
     margin-top: 24px;
-    border: 1px dashed var(--ink-line);
-    border-radius: 3px;
-    padding: 34px 20px;
+    border: 1.5px dashed var(--border-strong);
+    border-radius: 14px;
+    padding: 48px 28px;
     text-align: center;
     cursor: pointer;
-    transition: border-color 0.15s ease, background 0.15s ease;
-    background: var(--ink-800);
+    transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+    background: var(--surface);
+    position: relative;
+    overflow: hidden;
   }
+
+  .dropzone::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(500px 200px at 50% 0%, rgba(17,105,67,0.06), transparent 70%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+
   .dropzone:hover, .dropzone.drag {
-    border-color: var(--gold);
-    background: var(--ink-700);
+    border-color: var(--brand-green-2);
+    border-style: solid;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-hover);
   }
+
+  .dropzone:hover::before, .dropzone.drag::before { opacity: 1; }
+
   .dropzone input { display: none; }
+
+  .dz-icon {
+    width: 56px; height: 56px;
+    margin: 0 auto 18px;
+    color: var(--brand-green-2);
+    display: grid;
+    place-items: center;
+    background: var(--surface-tint);
+    border-radius: 14px;
+    transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  .dropzone:hover .dz-icon { transform: translateY(-3px) scale(1.05); }
+
   .dz-title {
     font-family: var(--font-serif);
-    font-size: 17px;
-    color: var(--ink-text);
-    margin-bottom: 4px;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 8px;
+    letter-spacing: -0.01em;
   }
+
   .dz-sub {
-    font-size: 12.5px;
-    color: var(--ink-text-dim);
+    font-size: 14px;
+    color: var(--ink-muted);
+    max-width: 52ch;
+    margin: 0 auto;
+    line-height: 1.6;
   }
+
   .dz-sub code {
-    color: var(--gold);
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    color: var(--brand-green-2);
+    background: var(--surface-tint);
+    padding: 1.5px 6px;
+    border-radius: 4px;
   }
 
   .status-line {
-    margin-top: 14px;
-    font-size: 12.5px;
-    color: var(--ink-text-dim);
-    min-height: 18px;
+    margin-top: 16px;
+    font-size: 13px;
+    font-family: var(--font-mono);
+    color: var(--ink-muted);
+    min-height: 20px;
+    text-align: center;
+    transition: color 0.2s ease;
   }
+
   .status-line.err { color: var(--fail); }
 
-  /* --- Report --- */
-  #report { display: none; margin-top: 34px; }
-  #report.show { display: block; }
+  /* ============ REPORT ============ */
+  #report { display: none; margin-top: 40px; }
+  #report.show { display: block; animation: reportIn 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+
+  @keyframes reportIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
 
   .sheet-head {
-    display: flex;
-    gap: 28px;
-    align-items: flex-start;
-    flex-wrap: wrap;
-    padding-bottom: 22px;
-    border-bottom: 1px solid var(--ink-line);
-    margin-bottom: 26px;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 32px;
+    align-items: center;
+    padding: 32px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    margin-bottom: 32px;
+    box-shadow: var(--shadow-card);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .sheet-head::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--gradient-primary);
   }
 
   .stamp-wrap { flex: 0 0 auto; }
 
   .stamp {
-    width: 132px; height: 132px;
-    transform: rotate(-4deg);
+    width: 148px; height: 148px;
+    filter: drop-shadow(0 6px 16px rgba(15,61,46,0.12));
   }
-  .stamp .ring-bg { stroke: var(--ink-line); }
-  .stamp .ring-fg { transition: stroke-dashoffset 0.6s ease; }
-  .stamp .score-num { font-family: var(--font-mono); font-weight: 600; }
-  .stamp .score-den { font-family: var(--font-mono); }
-  .stamp .score-label { font-family: var(--font-mono); letter-spacing: 0.06em; }
 
-  .sheet-meta { flex: 1 1 260px; padding-top: 6px; }
-  .sheet-file {
-    font-size: 13px;
-    color: var(--ink-text);
-    word-break: break-all;
-    margin-bottom: 10px;
+  .stamp .ring-bg { stroke: var(--border); }
+  .stamp .ring-fg {
+    stroke-dashoffset: var(--dash-full);
+    animation: stampFill 1.4s cubic-bezier(0.4, 0, 0.2, 1) 0.25s forwards;
   }
+  @keyframes stampFill { to { stroke-dashoffset: var(--dash-target); } }
+
+  .stamp .score-num {
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: 34px;
+    letter-spacing: -0.02em;
+  }
+  .stamp .score-den {
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+  }
+  .stamp .score-label {
+    font-family: var(--font-mono);
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    font-size: 8px;
+  }
+
+  .sheet-meta { padding-top: 4px; }
+
+  .sheet-file {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--ink-subtle);
+    letter-spacing: 0.02em;
+    word-break: break-all;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .sheet-file::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--brand-green-2);
+    flex: 0 0 auto;
+  }
+
   .sheet-verdict {
     font-family: var(--font-serif);
-    font-size: 16px;
-    line-height: 1.5;
-    color: var(--ink-text);
-    max-width: 46ch;
-  }
-  .sheet-note {
-    margin-top: 10px;
-    font-size: 12px;
-    color: var(--ink-text-dim);
+    font-size: clamp(20px, 2.6vw, 26px);
+    font-weight: 600;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    max-width: 42ch;
+    margin-bottom: 12px;
   }
 
-  section.block { margin-bottom: 30px; }
+  .sheet-note {
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--ink-subtle);
+    max-width: 52ch;
+  }
+
+  /* ============ BLOCKS ============ */
+  section.block { margin-bottom: 32px; }
 
   .block-head {
     display: flex;
     align-items: baseline;
     justify-content: space-between;
     gap: 12px;
-    border-bottom: 1px solid var(--ink-line);
-    padding-bottom: 8px;
+    padding-bottom: 12px;
     margin-bottom: 4px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
   }
+
+  .block-head::after {
+    content: '';
+    position: absolute;
+    bottom: -1px; left: 0;
+    width: 40px; height: 2.5px;
+    background: var(--brand-green-2);
+    border-radius: 2px;
+  }
+
   .block-title {
     font-family: var(--font-serif);
-    font-size: 16.5px;
-    color: var(--ink-text);
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--ink);
     display: flex;
-    align-items: baseline;
-    gap: 10px;
+    align-items: center;
+    gap: 12px;
+    letter-spacing: -0.01em;
   }
+
   .block-num {
     font-family: var(--font-mono);
-    font-size: 12px;
-    color: var(--gold);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--brand-green-2);
+    letter-spacing: 0.1em;
+    padding: 3px 8px;
+    border: 1px solid var(--border-strong);
+    border-radius: 6px;
+    background: var(--surface);
   }
+
   .block-score {
     font-family: var(--font-mono);
     font-size: 12.5px;
-    color: var(--ink-text-dim);
+    color: var(--ink-muted);
     white-space: nowrap;
+    letter-spacing: 0.02em;
+    font-weight: 500;
   }
 
+  /* ============ ROWS ============ */
   .row {
     display: flex;
     align-items: flex-start;
-    gap: 10px;
-    padding: 9px 0;
-    border-bottom: 1px solid var(--ink-line);
-    font-size: 13px;
+    gap: 12px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13.5px;
   }
   .row:last-child { border-bottom: none; }
 
   .mark {
-    flex: 0 0 16px;
-    font-size: 13px;
-    line-height: 1.5;
-    font-weight: 600;
+    flex: 0 0 20px;
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    font-size: 11px;
+    line-height: 20px;
+    text-align: center;
+    font-weight: 700;
+    margin-top: 1px;
   }
-  .mark.ok { color: var(--pass); }
-  .mark.no { color: var(--fail); }
+  .mark.ok { color: var(--pass); background: var(--pass-soft); }
+  .mark.no { color: var(--fail); background: var(--fail-soft); }
 
-  .row-body { flex: 1; }
+  .row-body { flex: 1; min-width: 0; }
   .row-name {
     font-family: var(--font-mono);
-    color: var(--ink-text);
+    font-size: 13px;
+    color: var(--ink);
+    font-weight: 500;
   }
   .row-detail {
-    font-family: var(--font-serif);
-    color: var(--ink-text-dim);
+    font-family: var(--font-sans);
+    color: var(--ink-muted);
     font-size: 13px;
+    margin-top: 3px;
+    line-height: 1.55;
+  }
+
+  /* ============ SEÇÕES ============ */
+  .secao {
+    padding: 20px 0;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+  .secao:last-child { border-bottom: none; }
+
+  .secao-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+  }
+
+  .secao-nome {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    flex-wrap: wrap;
+    min-width: 0;
+  }
+
+  .secao-nome .arquivo {
+    font-family: var(--font-mono);
+    font-size: 13.5px;
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  .secao-nome .label {
+    font-family: var(--font-sans);
+    font-size: 13px;
+    color: var(--ink-subtle);
+  }
+
+  .secao-score {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+    padding: 4px 10px;
+    border-radius: 6px;
+    letter-spacing: 0.02em;
+  }
+  .secao-score.ok { color: var(--pass); background: var(--pass-soft); }
+  .secao-score.mid { color: var(--warn); background: var(--warn-soft); }
+  .secao-score.no { color: var(--fail); background: var(--fail-soft); }
+
+  .secao-bar {
+    height: 4px;
+    background: var(--surface-tint);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 14px;
+  }
+
+  .secao-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 0;
+  }
+  .secao-bar-fill.ok { background: var(--gradient-primary); }
+  .secao-bar-fill.mid { background: linear-gradient(90deg, var(--warn), #d9a53e); }
+  .secao-bar-fill.no { background: var(--fail); }
+
+  .secao-detalhe {
+    font-family: var(--font-sans);
+    font-size: 12.5px;
+    color: var(--ink-subtle);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .meta-chip {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 5px;
+    background: var(--surface-tint);
+    border: 1px solid var(--border);
+    color: var(--ink-muted);
+  }
+
+  .crit-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .crit {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 13px;
+    line-height: 1.55;
+  }
+
+  .crit .mark {
+    flex: 0 0 16px;
+    width: 16px; height: 16px;
+    font-size: 10px;
+    line-height: 16px;
     margin-top: 2px;
   }
 
-  .subrow {
-    display: flex;
-    gap: 16px;
-    margin-top: 4px;
-    flex-wrap: wrap;
-  }
-  .subrow span {
-    font-size: 11.5px;
+  .crit .txt { color: var(--ink-muted); font-family: var(--font-sans); }
+  .crit .txt b { color: var(--ink); font-weight: 600; font-family: var(--font-mono); font-size: 12.5px; }
+  .crit .txt code {
     font-family: var(--font-mono);
-    padding: 2px 6px;
-    border-radius: 2px;
-  }
-  .subrow span.ok { color: var(--pass); background: var(--pass-bg); }
-  .subrow span.no { color: var(--fail); background: var(--fail-bg); }
-
-  footer.foot {
-    margin-top: 36px;
-    padding-top: 16px;
-    border-top: 1px solid var(--ink-line);
     font-size: 12px;
-    color: var(--ink-text-dim);
-    line-height: 1.6;
+    color: var(--brand-green-2);
+    background: var(--surface-tint);
+    padding: 1px 5px;
+    border-radius: 3px;
   }
+
+  /* ============ FOOTER ============ */
+  footer.foot {
+    margin-top: 40px;
+    padding: 24px 0 0;
+    border-top: 1px solid var(--border);
+    font-size: 12.5px;
+    color: var(--ink-subtle);
+    line-height: 1.7;
+    max-width: 72ch;
+  }
+
+  footer.foot strong { color: var(--ink-muted); font-weight: 600; }
 
   .reset-btn {
-    margin-top: 18px;
-    background: none;
-    border: 1px solid var(--ink-line);
-    color: var(--ink-text-dim);
-    font-family: var(--font-mono);
-    font-size: 12px;
-    padding: 8px 14px;
-    border-radius: 2px;
+    margin-top: 24px;
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    padding: 12px 22px;
+    border-radius: 8px;
     cursor: pointer;
-  }
-  .reset-btn:hover { border-color: var(--gold); color: var(--ink-text); }
-
-  @media (max-width: 520px) {
-    .sheet-head { gap: 18px; }
-    .stamp { width: 104px; height: 104px; }
+    transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
   }
 
-  a { color: var(--gold); }
-  :focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+  .reset-btn:hover {
+    border-color: var(--brand-green-2);
+    background: var(--surface-tint);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-card);
+  }
+
+  .reset-btn svg { width: 15px; height: 15px; }
+
+  /* ============ ACESSIBILIDADE ============ */
+  #acessibilidade {
+    position: fixed;
+    bottom: 22px; right: 22px;
+    z-index: 50;
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    border: none;
+    background: var(--gradient-primary);
+    color: #fff;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    box-shadow: 0 8px 24px -8px rgba(17,105,67,0.5);
+    transition: transform 0.2s ease;
+  }
+  #acessibilidade:hover { transform: scale(1.06); }
+  #acessibilidade svg { width: 22px; height: 22px; }
+
+  /* ============ RESPONSIVO ============ */
+  @media (max-width: 700px) {
+    .hero-inner { padding: 36px 20px 32px; }
+    main { padding: 24px 20px 60px; }
+    .sheet-head {
+      grid-template-columns: 1fr;
+      gap: 22px;
+      padding: 24px;
+    }
+    .stamp-wrap { justify-self: center; }
+    .stamp { width: 128px; height: 128px; }
+    .block-title { font-size: 19px; }
+    .meta-strip { gap: 10px 16px; font-size: 12px; }
+    .meta-strip .sep { display: none; }
+    .topbar-actions .status-pill { display: none; }
+  }
+
+  a { color: var(--brand-green-2); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  :focus-visible { outline: 2px solid var(--brand-green-2); outline-offset: 3px; border-radius: 4px; }
 
   @media (prefers-reduced-motion: reduce) {
-    * { transition: none !important; }
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+    }
   }
 </style>
 </head>
 <body>
-<div class="wrap">
 
-  <header class="top">
-    <div class="eyebrow">CAMPUS MARABÁ INDUSTRIAL · PROJETO INTEGRADOR · 3º BIMESTRE 2026</div>
-    <h1>Conferência de estrutura do relatório LaTeX</h1>
-    <p class="lede">Solte o <code>.zip</code> do seu projeto abaixo. A checagem roda aqui mesmo no navegador — nada é enviado para nenhum servidor — e segue os mesmos critérios do script do professor: estrutura de pastas, figuras por seção, tabela e lista.</p>
-  </header>
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="./">
+      <div class="brand-mark">IF</div>
+      <div class="brand-text">
+        <div class="brand-title">IFPA</div>
+        <div class="brand-sub">Conferência LaTeX</div>
+      </div>
+    </a>
+    <div class="topbar-actions">
+      <span class="status-pill"><span class="dot"></span>Sessão local</span>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div class="eyebrow">Campus Marabá Industrial · Projeto Integrador</div>
+    <h1>Conferência de estrutura do <span class="accent">relatório LaTeX</span></h1>
+    <p class="lede">
+      Solte o <code>.zip</code> do seu projeto abaixo. A checagem roda inteiramente no seu navegador —
+      nada é enviado a nenhum servidor — e aplica os mesmos critérios do script de correção:
+      estrutura de pastas, texto e figura por seção, tabela e lista.
+    </p>
+  </div>
+</section>
+
+<main>
+  <div class="meta-strip" role="status" aria-live="polite">
+    <span class="item">
+      <span class="label">Área</span>
+      <span class="value">Verificador de Relatório</span>
+    </span>
+    <span class="sep" aria-hidden="true"></span>
+    <span class="item">
+      <span class="label">Bimestre</span>
+      <span class="value">3º · 2026</span>
+    </span>
+    <span class="sep" aria-hidden="true"></span>
+    <span class="item">
+      <span class="label">Pontos</span>
+      <span class="value">2,5 verificáveis por script</span>
+    </span>
+  </div>
 
   <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-label="Selecionar arquivo zip">
     <input type="file" id="fileInput" accept=".zip">
+    <div class="dz-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="26" height="26" aria-hidden="true">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+        <polyline points="17 8 12 3 7 8"/>
+        <line x1="12" y1="3" x2="12" y2="15"/>
+      </svg>
+    </div>
     <div class="dz-title">Arraste o .zip aqui, ou clique para escolher</div>
     <div class="dz-sub">Aceita o arquivo exportado do Overleaf ou compactado manualmente — só precisa conter <code>main.tex</code> e a pasta <code>secoes/</code>.</div>
   </div>
-  <div class="status-line" id="statusLine"></div>
+  <div class="status-line" id="statusLine" role="status" aria-live="polite"></div>
 
   <div id="report"></div>
+</main>
 
-</div>
+<button id="acessibilidade" aria-label="Abrir opções de acessibilidade (Alt+4)" aria-expanded="false" type="button">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <circle cx="16" cy="4" r="1"></circle>
+    <path d="m18 19 1-7-6 1"></path>
+    <path d="m5 8 3-3 5.5 3-2.36 3.5"></path>
+    <path d="M4.24 14.5a5 5 0 0 0 6.88 6"></path>
+    <path d="M13.76 17.5a5 5 0 0 0-6.88-6"></path>
+  </svg>
+</button>
 
 <script>
 (function(){
@@ -314,9 +864,11 @@
     consideracoes_finais: "Considerações Finais"
   };
   const MIN_CHARS = 200;
+  const PONTOS_POR_SECAO = 1.0 / SECOES.length;
 
   const RE_FIGURE = /\\begin\{figure\}[\s\S]*?\\end\{figure\}/g;
   const RE_CAPTION = /\\caption\s*\{/;
+  const RE_INCLUDEGRAPHICS = /\\includegraphics/;
   const RE_TABLE = /\\begin\{table\}/;
   const RE_TABULAR = /\\begin\{tabular\}/;
   const RE_ITEMIZE = /\\begin\{itemize\}/;
@@ -340,18 +892,31 @@
     if (f) handleFile(f);
   });
 
+  document.getElementById('acessibilidade').addEventListener('click', function() {
+    // Placeholder: aqui você pode plugar um painel de acessibilidade real
+    const el = document.documentElement;
+    const cur = el.style.fontSize || '16px';
+    el.style.fontSize = (parseFloat(cur) >= 18 ? '16px' : '18px');
+    this.setAttribute('aria-expanded', el.style.fontSize === '18px');
+  });
+
   function setStatus(msg, isErr) {
     statusLine.textContent = msg || '';
     statusLine.classList.toggle('err', !!isErr);
   }
 
   function stripComments(text) {
-    return text.split('\n').map(line => line.replace(/(?<!\\)%.*$/, '')).join('\n');
+    return text.split('\n').map(line => {
+      let out = '';
+      for (let i = 0; i < line.length; i++) {
+        if (line[i] === '%' && (i === 0 || line[i-1] !== '\\')) break;
+        out += line[i];
+      }
+      return out;
+    }).join('\n');
   }
 
-  function pathSegments(path) {
-    return path.split('/').filter(Boolean);
-  }
+  function pathSegments(path) { return path.split('/').filter(Boolean); }
 
   async function handleFile(file) {
     if (!file.name.toLowerCase().endsWith('.zip')) {
@@ -378,7 +943,6 @@
     const entries = Object.values(zip.files).filter(e => !e.dir);
     const texEntries = entries.filter(e => e.name.toLowerCase().endsWith('.tex'));
 
-    // --- Estrutura ---
     const mainTex = entries.find(e => pathSegments(e.name).pop() === 'main.tex') || null;
     const temConfiguracao = entries.some(e => pathSegments(e.name).includes('configuracao'));
     const temSecoesFolder = entries.some(e => pathSegments(e.name).includes('secoes'));
@@ -399,37 +963,57 @@
       { ok: temConfiguracao, label: 'pasta configuracao/', detail: temConfiguracao ? 'encontrada' : 'não encontrada' },
       { ok: temSecoesFolder, label: 'pasta secoes/', detail: temSecoesFolder ? 'encontrada' : 'não encontrada' },
     ];
-    for (const secao of SECOES) {
-      const f = arquivosSecao[secao];
-      estruturaDetalhes.push({
-        ok: !!f,
-        label: secao + '.tex',
-        detail: f ? f.name : 'não encontrado dentro de secoes/'
-      });
-    }
 
-    // --- Texto + figuras por seção ---
     const secaoInfo = {};
+    let somaPontosSecoes = 0;
+
     for (const secao of SECOES) {
       const f = arquivosSecao[secao];
-      if (!f) { secaoInfo[secao] = { temTexto: false, temFigura: false, existe: false }; continue; }
+      if (!f) {
+        secaoInfo[secao] = {
+          existe: false, temTexto: false, chars: 0,
+          temFigura: false, temCaption: false, temInclude: false,
+          figuraSemCaption: false, captionSemFigure: false,
+          arquivo: null, pontos: 0
+        };
+        continue;
+      }
       const raw = await f.async('string');
       const texto = stripComments(raw);
-      const temTexto = texto.trim().length >= MIN_CHARS;
-      const figuras = texto.match(RE_FIGURE) || [];
-      const temFigura = figuras.some(fig => RE_CAPTION.test(fig));
-      secaoInfo[secao] = { temTexto, temFigura, existe: true, chars: texto.trim().length };
-    }
-    const secoesCompletas = SECOES.filter(s => secaoInfo[s].temTexto && secaoInfo[s].temFigura).length;
-    const pontosFiguras = Math.round((secoesCompletas / SECOES.length) * 100) / 100;
+      const chars = texto.trim().length;
+      const temTexto = chars >= MIN_CHARS;
 
-    // --- Tabela e lista (em qualquer .tex) ---
+      const figuras = texto.match(RE_FIGURE) || [];
+      const temCaption = figuras.some(fig => RE_CAPTION.test(fig));
+      const temInclude = figuras.some(fig => RE_INCLUDEGRAPHICS.test(fig));
+      const temFigura = temCaption;
+
+      const captionSemFigure = RE_CAPTION.test(texto) && figuras.length === 0;
+      const figuraSemCaption = figuras.length > 0 && !temCaption;
+
+      const pontos = (temTexto ? PONTOS_POR_SECAO/2 : 0) + (temFigura ? PONTOS_POR_SECAO/2 : 0);
+      somaPontosSecoes += pontos;
+
+      secaoInfo[secao] = {
+        existe: true, temTexto, chars,
+        temFigura, temCaption, temInclude,
+        figuraSemCaption, captionSemFigure,
+        arquivo: f.name,
+        pontos
+      };
+    }
+
     let temTabela = false, temLista = false;
+    let tabelaEm = null, listaEm = null;
     for (const e of texEntries) {
       const raw = await e.async('string');
       const texto = stripComments(raw);
-      if (RE_TABLE.test(texto) || RE_TABULAR.test(texto)) temTabela = true;
-      if (RE_ITEMIZE.test(texto) || RE_ENUMERATE.test(texto)) temLista = true;
+      if (!temTabela && (RE_TABLE.test(texto) || RE_TABULAR.test(texto))) {
+        temTabela = true; tabelaEm = e.name;
+      }
+      if (!temLista && (RE_ITEMIZE.test(texto) || RE_ENUMERATE.test(texto))) {
+        temLista = true; listaEm = e.name;
+      }
       if (temTabela && temLista) break;
     }
     let pontosTabLista = 0;
@@ -437,19 +1021,20 @@
     else if (temTabela || temLista) pontosTabLista = 0.5;
 
     const pontosEstrutura = estruturaOk ? 0.5 : 0;
+    const pontosFiguras = Math.round(somaPontosSecoes * 100) / 100;
     const total = Math.round((pontosEstrutura + pontosFiguras + pontosTabLista) * 100) / 100;
 
     return {
       estruturaOk, estruturaDetalhes, pontosEstrutura,
-      secaoInfo, secoesCompletas, pontosFiguras,
-      temTabela, temLista, pontosTabLista,
+      secaoInfo, pontosFiguras,
+      temTabela, temLista, tabelaEm, listaEm, pontosTabLista,
       total, texCount: texEntries.length
     };
   }
 
   function scoreColor(total) {
     if (total >= 2.3) return getVar('--pass');
-    if (total >= 1.3) return getVar('--gold');
+    if (total >= 1.3) return getVar('--warn');
     return getVar('--fail');
   }
   function getVar(name) {
@@ -459,18 +1044,86 @@
   function stampSVG(total, max) {
     const pct = Math.max(0, Math.min(1, total / max));
     const r = 54, c = 2 * Math.PI * r;
-    const offset = c * (1 - pct);
+    const dashTarget = c * (1 - pct);
     const color = scoreColor(total);
     return `
-      <svg class="stamp" viewBox="0 0 132 132">
+      <svg class="stamp" viewBox="0 0 132 132" role="img" aria-label="Pontuação ${total.toFixed(2)} de ${max.toFixed(2)}"
+           style="--dash-full:${c}; --dash-target:${dashTarget};">
         <circle class="ring-bg" cx="66" cy="66" r="${r}" fill="none" stroke-width="4"></circle>
         <circle class="ring-fg" cx="66" cy="66" r="${r}" fill="none" stroke="${color}" stroke-width="4"
-          stroke-dasharray="${c}" stroke-dashoffset="${offset}" stroke-linecap="round"
+          stroke-dasharray="${c}" stroke-linecap="round"
           transform="rotate(-90 66 66)"></circle>
-        <text x="66" y="61" text-anchor="middle" class="score-num" font-size="24" fill="${color}">${total.toFixed(2)}</text>
-        <text x="66" y="78" text-anchor="middle" class="score-den" font-size="11" fill="var(--ink-text-dim)">de ${max.toFixed(2)} pts</text>
-        <text x="66" y="20" text-anchor="middle" class="score-label" font-size="8" fill="var(--ink-text-dim)">SCRIPT</text>
+        <text x="66" y="64" text-anchor="middle" class="score-num" fill="${color}">${total.toFixed(2)}</text>
+        <text x="66" y="84" text-anchor="middle" class="score-den" fill="var(--ink-subtle)">DE ${max.toFixed(2)} PTS</text>
+        <text x="66" y="24" text-anchor="middle" class="score-label" fill="var(--ink-subtle)">SCRIPT</text>
       </svg>`;
+  }
+
+  function secaoScoreClass(pontos, max) {
+    if (pontos >= max) return 'ok';
+    if (pontos > 0) return 'mid';
+    return 'no';
+  }
+
+  function renderSecao(secao, info) {
+    const max = PONTOS_POR_SECAO;
+    const pontos = info.pontos;
+    const cls = secaoScoreClass(pontos, max);
+    const pct = Math.round((pontos / max) * 100);
+
+    let html = `<div class="secao">
+      <div class="secao-head">
+        <div class="secao-nome">
+          <span class="arquivo">${secao}.tex</span>
+          <span class="label">${SECOES_LABEL[secao]}</span>
+        </div>
+        <div class="secao-score ${cls}">${pontos.toFixed(2)} / ${max.toFixed(2)}</div>
+      </div>
+      <div class="secao-bar"><div class="secao-bar-fill ${cls}" data-pct="${pct}"></div></div>`;
+
+    if (!info.existe) {
+      html += `<div class="secao-detalhe">Arquivo não encontrado dentro da pasta <code style="font-family:var(--font-mono);color:var(--brand-green-2);">secoes/</code>.</div>`;
+      html += `<div class="crit-list">
+        <div class="crit"><span class="mark no">✗</span><span class="txt">texto ≥ <b>${MIN_CHARS}</b> caracteres</span></div>
+        <div class="crit"><span class="mark no">✗</span><span class="txt">figura com <code>\\caption</code></span></div>
+      </div></div>`;
+      return html;
+    }
+
+    html += `<div class="secao-detalhe">
+      <span class="meta-chip">${escapeHtml(info.arquivo)}</span>
+      <span class="meta-chip">${info.chars} caractere(s)</span>
+    </div>`;
+
+    html += `<div class="crit-list">`;
+
+    html += `<div class="crit">
+      <span class="mark ${info.temTexto ? 'ok' : 'no'}">${info.temTexto ? '✓' : '✗'}</span>
+      <span class="txt">texto ≥ <b>${MIN_CHARS}</b> caracteres ${
+        info.temTexto
+          ? `— tem <b>${info.chars}</b>`
+          : `— tem <b>${info.chars}</b>, faltam <b>${MIN_CHARS - info.chars}</b>`
+      }</span>
+    </div>`;
+
+    let figTxt = 'figura com <code>\\caption</code>';
+    if (info.temFigura) {
+      figTxt += ' — encontrada';
+      if (info.temInclude) figTxt += ' com <code>\\includegraphics</code>';
+    } else if (info.figuraSemCaption) {
+      figTxt += ' — há <b>figure</b> sem <b>\\caption</b>';
+    } else if (info.captionSemFigure) {
+      figTxt += ' — há <b>\\caption</b> fora de <b>figure</b>';
+    } else {
+      figTxt += ' — nenhuma figura encontrada';
+    }
+    html += `<div class="crit">
+      <span class="mark ${info.temFigura ? 'ok' : 'no'}">${info.temFigura ? '✓' : '✗'}</span>
+      <span class="txt">${figTxt}</span>
+    </div>`;
+
+    html += `</div></div>`;
+    return html;
   }
 
   function renderReport(filename, r) {
@@ -486,11 +1139,10 @@
       <div class="sheet-meta">
         <div class="sheet-file">${escapeHtml(filename)}</div>
         <div class="sheet-verdict">${verdict}</div>
-        <div class="sheet-note">A Defesa de Autoria (2,5 pts) é avaliada na entrevista e não entra nesta conferência.</div>
+        <div class="sheet-note">A Defesa de Autoria (2,5 pts) é avaliada na entrevista e não entra nesta conferência automática.</div>
       </div>
     </div>`;
 
-    // Bloco 1 — Estrutura
     html += `<section class="block">
       <div class="block-head">
         <div class="block-title"><span class="block-num">01</span> Estrutura de arquivos e pastas</div>
@@ -501,51 +1153,53 @@
     }
     html += `</section>`;
 
-    // Bloco 2 — Figuras por seção
     html += `<section class="block">
       <div class="block-head">
         <div class="block-title"><span class="block-num">02</span> Texto e figura por seção</div>
         <div class="block-score">${r.pontosFiguras.toFixed(2)} / 1.00</div>
       </div>`;
     for (const secao of SECOES) {
-      const info = r.secaoInfo[secao];
-      const ok = info.existe && info.temTexto && info.temFigura;
-      const detailBits = !info.existe
-        ? 'arquivo não encontrado'
-        : `${info.chars} caractere(s) de texto`;
-      html += `<div class="row">
-        <div class="mark ${ok ? 'ok' : 'no'}">${ok ? '✓' : '✗'}</div>
-        <div class="row-body">
-          <div class="row-name">${secao}.tex <span style="color:var(--ink-text-dim); font-family:var(--font-serif); font-size:12.5px;">— ${SECOES_LABEL[secao]}</span></div>
-          <div class="row-detail">${detailBits}</div>
-          <div class="subrow">
-            <span class="${info.temTexto ? 'ok' : 'no'}">${info.temTexto ? '✓' : '✗'} texto ≥ 200 caracteres</span>
-            <span class="${info.temFigura ? 'ok' : 'no'}">${info.temFigura ? '✓' : '✗'} figura com \\caption</span>
-          </div>
-        </div>
-      </div>`;
+      html += renderSecao(secao, r.secaoInfo[secao]);
     }
     html += `</section>`;
 
-    // Bloco 3 — Tabela e lista
     html += `<section class="block">
       <div class="block-head">
         <div class="block-title"><span class="block-num">03</span> Tabela e lista</div>
         <div class="block-score">${r.pontosTabLista.toFixed(2)} / 1.00</div>
       </div>`;
-    html += row(r.temTabela, 'Tabela', r.temTabela ? 'encontrada (table ou tabular)' : 'nenhuma table/tabular encontrada em ' + r.texCount + ' arquivo(s) .tex');
-    html += row(r.temLista, 'Lista', r.temLista ? 'encontrada (itemize ou enumerate)' : 'nenhuma itemize/enumerate encontrada');
+    html += row(r.temTabela, 'Tabela',
+      r.temTabela
+        ? `encontrada em ${escapeHtml(r.tabelaEm || '—')}`
+        : `nenhuma table/tabular encontrada em ${r.texCount} arquivo(s) .tex`);
+    html += row(r.temLista, 'Lista',
+      r.temLista
+        ? `encontrada em ${escapeHtml(r.listaEm || '—')}`
+        : 'nenhuma itemize/enumerate encontrada');
     html += `</section>`;
 
     html += `<footer class="foot">
       Conferência local no navegador, sem envio de arquivos — mesmos critérios do script de correção automatizada do professor.<br>
-      Antes de enviar pelo SIGAA: gere o .zip mantendo a estrutura de pastas exata e confira o prazo (27/09/2026, 23:59).
+      <strong>Antes de enviar pelo SIGAA:</strong> gere o .zip mantendo a estrutura de pastas exata e confira o prazo (27/09/2026, 23:59).
     </footer>`;
 
-    html += `<button class="reset-btn" id="resetBtn" type="button">Conferir outro arquivo</button>`;
+    html += `<button class="reset-btn" id="resetBtn" type="button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M3 12a9 9 0 1 0 3-6.7L3 8"/>
+        <polyline points="3 3 3 8 8 8"/>
+      </svg>
+      Conferir outro arquivo
+    </button>`;
 
     report.innerHTML = html;
     report.classList.add('show');
+
+    requestAnimationFrame(() => {
+      document.querySelectorAll('.secao-bar-fill').forEach(el => {
+        el.style.width = el.getAttribute('data-pct') + '%';
+      });
+    });
+
     document.getElementById('resetBtn').addEventListener('click', () => {
       report.classList.remove('show');
       report.innerHTML = '';

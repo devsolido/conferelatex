@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Conferência de Estrutura — Relatório Técnico LaTeX</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<style>
+  :root {
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+
+    --ink-900: #11131a;
+    --ink-800: #171a24;
+    --ink-700: #20242f;
+    --ink-line: #333748;
+    --ink-text: #e7e6df;
+    --ink-text-dim: #9a9db0;
+
+    --paper: #f4f2ea;
+    --paper-line: #d9d5c5;
+    --paper-text: #201f1a;
+    --paper-text-dim: #6b6858;
+
+    --pass: #3d7a57;
+    --pass-bg: rgba(61,122,87,0.12);
+    --fail: #a8402f;
+    --fail-bg: rgba(168,64,47,0.10);
+    --gold: #b08a2e;
+
+    --font-serif: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+    --font-mono: 'IBM Plex Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+  }
+
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--ink-900);
+    color: var(--ink-text);
+    font-family: var(--font-mono);
+    min-height: 100%;
+  }
+
+  body {
+    padding: max(28px, env(safe-area-inset-top)) 20px max(40px, env(safe-area-inset-bottom));
+  }
+
+  .wrap {
+    max-width: 880px;
+    margin: 0 auto;
+  }
+
+  header.top {
+    margin-bottom: 28px;
+  }
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    letter-spacing: 0.02em;
+    color: var(--ink-text-dim);
+  }
+
+  h1 {
+    font-family: var(--font-serif);
+    font-weight: 600;
+    font-size: clamp(24px, 4vw, 32px);
+    line-height: 1.25;
+    margin: 6px 0 8px;
+    color: var(--ink-text);
+    max-width: 640px;
+  }
+
+  .lede {
+    font-family: var(--font-serif);
+    font-size: 15.5px;
+    line-height: 1.55;
+    color: var(--ink-text-dim);
+    max-width: 60ch;
+  }
+
+  /* --- Drop zone --- */
+  .dropzone {
+    margin-top: 24px;
+    border: 1px dashed var(--ink-line);
+    border-radius: 3px;
+    padding: 34px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.15s ease, background 0.15s ease;
+    background: var(--ink-800);
+  }
+  .dropzone:hover, .dropzone.drag {
+    border-color: var(--gold);
+    background: var(--ink-700);
+  }
+  .dropzone input { display: none; }
+  .dz-title {
+    font-family: var(--font-serif);
+    font-size: 17px;
+    color: var(--ink-text);
+    margin-bottom: 4px;
+  }
+  .dz-sub {
+    font-size: 12.5px;
+    color: var(--ink-text-dim);
+  }
+  .dz-sub code {
+    color: var(--gold);
+  }
+
+  .status-line {
+    margin-top: 14px;
+    font-size: 12.5px;
+    color: var(--ink-text-dim);
+    min-height: 18px;
+  }
+  .status-line.err { color: var(--fail); }
+
+  /* --- Report --- */
+  #report { display: none; margin-top: 34px; }
+  #report.show { display: block; }
+
+  .sheet-head {
+    display: flex;
+    gap: 28px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    padding-bottom: 22px;
+    border-bottom: 1px solid var(--ink-line);
+    margin-bottom: 26px;
+  }
+
+  .stamp-wrap { flex: 0 0 auto; }
+
+  .stamp {
+    width: 132px; height: 132px;
+    transform: rotate(-4deg);
+  }
+  .stamp .ring-bg { stroke: var(--ink-line); }
+  .stamp .ring-fg { transition: stroke-dashoffset 0.6s ease; }
+  .stamp .score-num { font-family: var(--font-mono); font-weight: 600; }
+  .stamp .score-den { font-family: var(--font-mono); }
+  .stamp .score-label { font-family: var(--font-mono); letter-spacing: 0.06em; }
+
+  .sheet-meta { flex: 1 1 260px; padding-top: 6px; }
+  .sheet-file {
+    font-size: 13px;
+    color: var(--ink-text);
+    word-break: break-all;
+    margin-bottom: 10px;
+  }
+  .sheet-verdict {
+    font-family: var(--font-serif);
+    font-size: 16px;
+    line-height: 1.5;
+    color: var(--ink-text);
+    max-width: 46ch;
+  }
+  .sheet-note {
+    margin-top: 10px;
+    font-size: 12px;
+    color: var(--ink-text-dim);
+  }
+
+  section.block { margin-bottom: 30px; }
+
+  .block-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    border-bottom: 1px solid var(--ink-line);
+    padding-bottom: 8px;
+    margin-bottom: 4px;
+  }
+  .block-title {
+    font-family: var(--font-serif);
+    font-size: 16.5px;
+    color: var(--ink-text);
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+  .block-num {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--gold);
+  }
+  .block-score {
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    color: var(--ink-text-dim);
+    white-space: nowrap;
+  }
+
+  .row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 9px 0;
+    border-bottom: 1px solid var(--ink-line);
+    font-size: 13px;
+  }
+  .row:last-child { border-bottom: none; }
+
+  .mark {
+    flex: 0 0 16px;
+    font-size: 13px;
+    line-height: 1.5;
+    font-weight: 600;
+  }
+  .mark.ok { color: var(--pass); }
+  .mark.no { color: var(--fail); }
+
+  .row-body { flex: 1; }
+  .row-name {
+    font-family: var(--font-mono);
+    color: var(--ink-text);
+  }
+  .row-detail {
+    font-family: var(--font-serif);
+    color: var(--ink-text-dim);
+    font-size: 13px;
+    margin-top: 2px;
+  }
+
+  .subrow {
+    display: flex;
+    gap: 16px;
+    margin-top: 4px;
+    flex-wrap: wrap;
+  }
+  .subrow span {
+    font-size: 11.5px;
+    font-family: var(--font-mono);
+    padding: 2px 6px;
+    border-radius: 2px;
+  }
+  .subrow span.ok { color: var(--pass); background: var(--pass-bg); }
+  .subrow span.no { color: var(--fail); background: var(--fail-bg); }
+
+  footer.foot {
+    margin-top: 36px;
+    padding-top: 16px;
+    border-top: 1px solid var(--ink-line);
+    font-size: 12px;
+    color: var(--ink-text-dim);
+    line-height: 1.6;
+  }
+
+  .reset-btn {
+    margin-top: 18px;
+    background: none;
+    border: 1px solid var(--ink-line);
+    color: var(--ink-text-dim);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    padding: 8px 14px;
+    border-radius: 2px;
+    cursor: pointer;
+  }
+  .reset-btn:hover { border-color: var(--gold); color: var(--ink-text); }
+
+  @media (max-width: 520px) {
+    .sheet-head { gap: 18px; }
+    .stamp { width: 104px; height: 104px; }
+  }
+
+  a { color: var(--gold); }
+  :focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div class="eyebrow">CAMPUS MARABÁ INDUSTRIAL · PROJETO INTEGRADOR · 3º BIMESTRE 2026</div>
+    <h1>Conferência de estrutura do relatório LaTeX</h1>
+    <p class="lede">Solte o <code>.zip</code> do seu projeto abaixo. A checagem roda aqui mesmo no navegador — nada é enviado para nenhum servidor — e segue os mesmos critérios do script do professor: estrutura de pastas, figuras por seção, tabela e lista.</p>
+  </header>
+
+  <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-label="Selecionar arquivo zip">
+    <input type="file" id="fileInput" accept=".zip">
+    <div class="dz-title">Arraste o .zip aqui, ou clique para escolher</div>
+    <div class="dz-sub">Aceita o arquivo exportado do Overleaf ou compactado manualmente — só precisa conter <code>main.tex</code> e a pasta <code>secoes/</code>.</div>
+  </div>
+  <div class="status-line" id="statusLine"></div>
+
+  <div id="report"></div>
+
+</div>
+
+<script>
+(function(){
+  const SECOES = ["introducao","fundamentacao_teorica","metodologia","resultados","consideracoes_finais"];
+  const SECOES_LABEL = {
+    introducao: "Introdução",
+    fundamentacao_teorica: "Fundamentação Teórica",
+    metodologia: "Metodologia",
+    resultados: "Resultados",
+    consideracoes_finais: "Considerações Finais"
+  };
+  const MIN_CHARS = 200;
+
+  const RE_FIGURE = /\\begin\{figure\}[\s\S]*?\\end\{figure\}/g;
+  const RE_CAPTION = /\\caption\s*\{/;
+  const RE_TABLE = /\\begin\{table\}/;
+  const RE_TABULAR = /\\begin\{tabular\}/;
+  const RE_ITEMIZE = /\\begin\{itemize\}/;
+  const RE_ENUMERATE = /\\begin\{enumerate\}/;
+
+  const dz = document.getElementById('dropzone');
+  const input = document.getElementById('fileInput');
+  const statusLine = document.getElementById('statusLine');
+  const report = document.getElementById('report');
+
+  dz.addEventListener('click', () => input.click());
+  dz.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); input.click(); } });
+  ['dragover','dragenter'].forEach(ev => dz.addEventListener(ev, e => { e.preventDefault(); dz.classList.add('drag'); }));
+  ['dragleave','drop'].forEach(ev => dz.addEventListener(ev, e => { e.preventDefault(); dz.classList.remove('drag'); }));
+  dz.addEventListener('drop', e => {
+    const f = e.dataTransfer.files && e.dataTransfer.files[0];
+    if (f) handleFile(f);
+  });
+  input.addEventListener('change', e => {
+    const f = e.target.files && e.target.files[0];
+    if (f) handleFile(f);
+  });
+
+  function setStatus(msg, isErr) {
+    statusLine.textContent = msg || '';
+    statusLine.classList.toggle('err', !!isErr);
+  }
+
+  function stripComments(text) {
+    return text.split('\n').map(line => line.replace(/(?<!\\)%.*$/, '')).join('\n');
+  }
+
+  function pathSegments(path) {
+    return path.split('/').filter(Boolean);
+  }
+
+  async function handleFile(file) {
+    if (!file.name.toLowerCase().endsWith('.zip')) {
+      setStatus('Envie um arquivo .zip — esse formato não é aceito.', true);
+      return;
+    }
+    setStatus('Lendo ' + file.name + '…');
+    report.classList.remove('show');
+    report.innerHTML = '';
+
+    try {
+      const buf = await file.arrayBuffer();
+      const zip = await JSZip.loadAsync(buf);
+      const result = await analyze(zip);
+      renderReport(file.name, result);
+      setStatus('');
+    } catch (err) {
+      console.error(err);
+      setStatus('Não foi possível ler esse arquivo (' + (err && err.message ? err.message : 'erro desconhecido') + ').', true);
+    }
+  }
+
+  async function analyze(zip) {
+    const entries = Object.values(zip.files).filter(e => !e.dir);
+    const texEntries = entries.filter(e => e.name.toLowerCase().endsWith('.tex'));
+
+    // --- Estrutura ---
+    const mainTex = entries.find(e => pathSegments(e.name).pop() === 'main.tex') || null;
+    const temConfiguracao = entries.some(e => pathSegments(e.name).includes('configuracao'));
+    const temSecoesFolder = entries.some(e => pathSegments(e.name).includes('secoes'));
+
+    const arquivosSecao = {};
+    for (const secao of SECOES) {
+      const nomeAlvo = secao + '.tex';
+      const found = texEntries.find(e => {
+        const segs = pathSegments(e.name);
+        return segs[segs.length - 1] === nomeAlvo && segs.includes('secoes');
+      });
+      if (found) arquivosSecao[secao] = found;
+    }
+
+    const estruturaOk = !!mainTex && temConfiguracao && temSecoesFolder && Object.keys(arquivosSecao).length === SECOES.length;
+    const estruturaDetalhes = [
+      { ok: !!mainTex, label: 'main.tex', detail: mainTex ? mainTex.name : 'não encontrado em nenhuma pasta' },
+      { ok: temConfiguracao, label: 'pasta configuracao/', detail: temConfiguracao ? 'encontrada' : 'não encontrada' },
+      { ok: temSecoesFolder, label: 'pasta secoes/', detail: temSecoesFolder ? 'encontrada' : 'não encontrada' },
+    ];
+    for (const secao of SECOES) {
+      const f = arquivosSecao[secao];
+      estruturaDetalhes.push({
+        ok: !!f,
+        label: secao + '.tex',
+        detail: f ? f.name : 'não encontrado dentro de secoes/'
+      });
+    }
+
+    // --- Texto + figuras por seção ---
+    const secaoInfo = {};
+    for (const secao of SECOES) {
+      const f = arquivosSecao[secao];
+      if (!f) { secaoInfo[secao] = { temTexto: false, temFigura: false, existe: false }; continue; }
+      const raw = await f.async('string');
+      const texto = stripComments(raw);
+      const temTexto = texto.trim().length >= MIN_CHARS;
+      const figuras = texto.match(RE_FIGURE) || [];
+      const temFigura = figuras.some(fig => RE_CAPTION.test(fig));
+      secaoInfo[secao] = { temTexto, temFigura, existe: true, chars: texto.trim().length };
+    }
+    const secoesCompletas = SECOES.filter(s => secaoInfo[s].temTexto && secaoInfo[s].temFigura).length;
+    const pontosFiguras = Math.round((secoesCompletas / SECOES.length) * 100) / 100;
+
+    // --- Tabela e lista (em qualquer .tex) ---
+    let temTabela = false, temLista = false;
+    for (const e of texEntries) {
+      const raw = await e.async('string');
+      const texto = stripComments(raw);
+      if (RE_TABLE.test(texto) || RE_TABULAR.test(texto)) temTabela = true;
+      if (RE_ITEMIZE.test(texto) || RE_ENUMERATE.test(texto)) temLista = true;
+      if (temTabela && temLista) break;
+    }
+    let pontosTabLista = 0;
+    if (temTabela && temLista) pontosTabLista = 1.0;
+    else if (temTabela || temLista) pontosTabLista = 0.5;
+
+    const pontosEstrutura = estruturaOk ? 0.5 : 0;
+    const total = Math.round((pontosEstrutura + pontosFiguras + pontosTabLista) * 100) / 100;
+
+    return {
+      estruturaOk, estruturaDetalhes, pontosEstrutura,
+      secaoInfo, secoesCompletas, pontosFiguras,
+      temTabela, temLista, pontosTabLista,
+      total, texCount: texEntries.length
+    };
+  }
+
+  function scoreColor(total) {
+    if (total >= 2.3) return getVar('--pass');
+    if (total >= 1.3) return getVar('--gold');
+    return getVar('--fail');
+  }
+  function getVar(name) {
+    return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  }
+
+  function stampSVG(total, max) {
+    const pct = Math.max(0, Math.min(1, total / max));
+    const r = 54, c = 2 * Math.PI * r;
+    const offset = c * (1 - pct);
+    const color = scoreColor(total);
+    return `
+      <svg class="stamp" viewBox="0 0 132 132">
+        <circle class="ring-bg" cx="66" cy="66" r="${r}" fill="none" stroke-width="4"></circle>
+        <circle class="ring-fg" cx="66" cy="66" r="${r}" fill="none" stroke="${color}" stroke-width="4"
+          stroke-dasharray="${c}" stroke-dashoffset="${offset}" stroke-linecap="round"
+          transform="rotate(-90 66 66)"></circle>
+        <text x="66" y="61" text-anchor="middle" class="score-num" font-size="24" fill="${color}">${total.toFixed(2)}</text>
+        <text x="66" y="78" text-anchor="middle" class="score-den" font-size="11" fill="var(--ink-text-dim)">de ${max.toFixed(2)} pts</text>
+        <text x="66" y="20" text-anchor="middle" class="score-label" font-size="8" fill="var(--ink-text-dim)">SCRIPT</text>
+      </svg>`;
+  }
+
+  function renderReport(filename, r) {
+    const verdict = r.total >= 2.5
+      ? 'Todos os critérios automáticos foram atendidos.'
+      : r.total === 0
+        ? 'Nenhum critério automático foi atendido ainda — reveja a estrutura do projeto.'
+        : 'Ainda faltam itens para o total de 2,5 pontos verificáveis por script.';
+
+    let html = '';
+    html += `<div class="sheet-head">
+      <div class="stamp-wrap">${stampSVG(r.total, 2.5)}</div>
+      <div class="sheet-meta">
+        <div class="sheet-file">${escapeHtml(filename)}</div>
+        <div class="sheet-verdict">${verdict}</div>
+        <div class="sheet-note">A Defesa de Autoria (2,5 pts) é avaliada na entrevista e não entra nesta conferência.</div>
+      </div>
+    </div>`;
+
+    // Bloco 1 — Estrutura
+    html += `<section class="block">
+      <div class="block-head">
+        <div class="block-title"><span class="block-num">01</span> Estrutura de arquivos e pastas</div>
+        <div class="block-score">${r.pontosEstrutura.toFixed(2)} / 0.50</div>
+      </div>`;
+    for (const d of r.estruturaDetalhes) {
+      html += row(d.ok, d.label, d.detail);
+    }
+    html += `</section>`;
+
+    // Bloco 2 — Figuras por seção
+    html += `<section class="block">
+      <div class="block-head">
+        <div class="block-title"><span class="block-num">02</span> Texto e figura por seção</div>
+        <div class="block-score">${r.pontosFiguras.toFixed(2)} / 1.00</div>
+      </div>`;
+    for (const secao of SECOES) {
+      const info = r.secaoInfo[secao];
+      const ok = info.existe && info.temTexto && info.temFigura;
+      const detailBits = !info.existe
+        ? 'arquivo não encontrado'
+        : `${info.chars} caractere(s) de texto`;
+      html += `<div class="row">
+        <div class="mark ${ok ? 'ok' : 'no'}">${ok ? '✓' : '✗'}</div>
+        <div class="row-body">
+          <div class="row-name">${secao}.tex <span style="color:var(--ink-text-dim); font-family:var(--font-serif); font-size:12.5px;">— ${SECOES_LABEL[secao]}</span></div>
+          <div class="row-detail">${detailBits}</div>
+          <div class="subrow">
+            <span class="${info.temTexto ? 'ok' : 'no'}">${info.temTexto ? '✓' : '✗'} texto ≥ 200 caracteres</span>
+            <span class="${info.temFigura ? 'ok' : 'no'}">${info.temFigura ? '✓' : '✗'} figura com \\caption</span>
+          </div>
+        </div>
+      </div>`;
+    }
+    html += `</section>`;
+
+    // Bloco 3 — Tabela e lista
+    html += `<section class="block">
+      <div class="block-head">
+        <div class="block-title"><span class="block-num">03</span> Tabela e lista</div>
+        <div class="block-score">${r.pontosTabLista.toFixed(2)} / 1.00</div>
+      </div>`;
+    html += row(r.temTabela, 'Tabela', r.temTabela ? 'encontrada (table ou tabular)' : 'nenhuma table/tabular encontrada em ' + r.texCount + ' arquivo(s) .tex');
+    html += row(r.temLista, 'Lista', r.temLista ? 'encontrada (itemize ou enumerate)' : 'nenhuma itemize/enumerate encontrada');
+    html += `</section>`;
+
+    html += `<footer class="foot">
+      Conferência local no navegador, sem envio de arquivos — mesmos critérios do script de correção automatizada do professor.<br>
+      Antes de enviar pelo SIGAA: gere o .zip mantendo a estrutura de pastas exata e confira o prazo (27/09/2026, 23:59).
+    </footer>`;
+
+    html += `<button class="reset-btn" id="resetBtn" type="button">Conferir outro arquivo</button>`;
+
+    report.innerHTML = html;
+    report.classList.add('show');
+    document.getElementById('resetBtn').addEventListener('click', () => {
+      report.classList.remove('show');
+      report.innerHTML = '';
+      input.value = '';
+      setStatus('');
+      dz.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+  }
+
+  function row(ok, label, detail) {
+    return `<div class="row">
+      <div class="mark ${ok ? 'ok' : 'no'}">${ok ? '✓' : '✗'}</div>
+      <div class="row-body">
+        <div class="row-name">${escapeHtml(label)}</div>
+        <div class="row-detail">${escapeHtml(detail)}</div>
+      </div>
+    </div>`;
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+})();
+</script>
+</body>
+</html>

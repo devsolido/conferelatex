@@ -1405,6 +1405,16 @@
 
   document.getElementById('acessibilidade').addEventListener('click', function() {
     const widget = window.VLibrasWidget;
+    const widgetRoot = document.getElementById('vlibras-app-root');
+    const expanded = widgetRoot?.dataset.active === 'true'
+      || this.getAttribute('aria-expanded') === 'true';
+
+    if (expanded) {
+      if (widgetRoot) widgetRoot.dataset.active = 'false';
+      this.setAttribute('aria-expanded', 'false');
+      return;
+    }
+
     if (widget && typeof widget.open === 'function') {
       widget.open();
       this.setAttribute('aria-expanded', 'true');

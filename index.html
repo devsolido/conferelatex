@@ -16,7 +16,6 @@
 
 <style>
   :root {
-    /* Paleta institucional IFPA */
     --brand-green: #0f3d2e;
     --brand-green-2: #116943;
     --brand-green-3: #1a8a58;
@@ -81,12 +80,9 @@
     overflow-x: hidden;
   }
 
-  body {
-    padding-bottom: env(safe-area-inset-bottom);
-  }
+  body { padding-bottom: env(safe-area-inset-bottom); }
 
   img, svg { max-width: 100%; }
-
   button { font-family: inherit; }
 
   /* ============ TOPBAR ============ */
@@ -365,8 +361,9 @@
     flex-shrink: 0;
   }
 
-  /* ============ DROPZONE ============ */
+  /* ============ DROPZONE (agora é <label>) ============ */
   .dropzone {
+    display: block;
     margin-top: 24px;
     border: 1.5px dashed var(--border-strong);
     border-radius: var(--radius-lg);
@@ -378,6 +375,10 @@
     position: relative;
     overflow: hidden;
     -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    -webkit-user-select: none;
+    color: inherit;
+    text-decoration: none;
   }
 
   .dropzone.hidden {
@@ -408,13 +409,24 @@
     box-shadow: var(--shadow-hover);
   }
 
-  .dropzone:active {
-    transform: translateY(0);
-  }
+  .dropzone:active { transform: translateY(0); }
 
   .dropzone:hover::before, .dropzone.drag::before { opacity: 1; }
 
-  .dropzone input { display: none; }
+  /* O input fica invisível mas continua clicável (mobile-safe) */
+  .dropzone input[type="file"] {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+    opacity: 0;
+    pointer-events: none;
+  }
 
   .dz-icon {
     width: 56px; height: 56px;
@@ -425,6 +437,7 @@
     background: var(--surface-tint);
     border-radius: var(--radius-lg);
     transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    pointer-events: none;
   }
 
   .dropzone:hover .dz-icon { transform: translateY(-3px) scale(1.05); }
@@ -437,6 +450,7 @@
     margin-bottom: 8px;
     letter-spacing: -0.01em;
     text-wrap: balance;
+    pointer-events: none;
   }
 
   .dz-sub {
@@ -446,6 +460,7 @@
     margin: 0 auto;
     line-height: 1.6;
     text-wrap: pretty;
+    pointer-events: none;
   }
 
   .dz-sub code {
@@ -456,6 +471,33 @@
     padding: 1.5px 6px;
     border-radius: 4px;
     word-break: break-word;
+  }
+
+  /* Botão alternativo "Escolher arquivo" para mobile */
+  .dz-cta {
+    display: none;
+    margin: 20px auto 0;
+    padding: 12px 22px;
+    border-radius: var(--radius-md);
+    background: var(--gradient-primary);
+    color: #fff;
+    font-family: var(--font-sans);
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    border: none;
+    cursor: pointer;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 6px 16px -6px rgba(17,105,67,0.45);
+    pointer-events: none;
+    transition: transform 0.15s ease;
+  }
+
+  .dz-cta svg { width: 16px; height: 16px; flex-shrink: 0; }
+
+  @media (hover: none) and (pointer: coarse) {
+    .dz-cta { display: inline-flex; }
   }
 
   .status-line {
@@ -481,7 +523,6 @@
     to { opacity: 1; transform: translateY(0); }
   }
 
-  /* Botão voltar */
   .back-btn {
     display: inline-flex;
     align-items: center;
@@ -509,7 +550,6 @@
   }
 
   .back-btn:active { transform: translateX(-1px) scale(0.98); }
-
   .back-btn svg { width: 15px; height: 15px; flex-shrink: 0; }
 
   /* ============ RESUMO ============ */
@@ -977,17 +1017,14 @@
   /* =================== RESPONSIVIDADE ========================= */
   /* ============================================================ */
 
-  /* Tablets grandes */
   @media (max-width: 1024px) {
     :root { --container: 100%; }
     .summary { gap: 28px; padding: 32px; }
     .stamp { width: 152px; height: 152px; }
   }
 
-  /* Tablets */
   @media (max-width: 860px) {
     :root { --pad-x: 20px; }
-
     .summary {
       grid-template-columns: 1fr;
       gap: 24px;
@@ -1003,12 +1040,10 @@
     .summary-bar { margin: 0 auto; }
   }
 
-  /* Celulares grandes */
   @media (max-width: 640px) {
     :root { --pad-x: 16px; }
 
     .topbar-inner { height: 60px; gap: 10px; }
-
     .brand-mark { width: 36px; height: 36px; font-size: 16px; border-radius: 8px; }
     .brand-title { font-size: 14px; }
     .brand-sub { font-size: 9.5px; letter-spacing: 0.14em; }
@@ -1089,7 +1124,6 @@
     #acessibilidade svg { width: 20px; height: 20px; }
   }
 
-  /* Celulares pequenos (iPhone SE, Galaxy A0x) */
   @media (max-width: 400px) {
     :root { --pad-x: 14px; }
 
@@ -1105,9 +1139,7 @@
     .lede { font-size: 13.5px; line-height: 1.6; }
 
     main { padding: 20px 14px 50px; }
-
     .meta-strip { padding: 10px 12px; }
-
     .dropzone { padding: 30px 16px; }
     .dz-icon { width: 44px; height: 44px; }
 
@@ -1141,7 +1173,6 @@
     #acessibilidade svg { width: 18px; height: 18px; }
   }
 
-  /* Orientação paisagem em celular */
   @media (max-width: 900px) and (orientation: landscape) and (max-height: 500px) {
     .topbar-inner { height: 52px; }
     .hero-inner { padding: 20px var(--pad-x) 18px; }
@@ -1151,7 +1182,6 @@
     .dz-icon { margin-bottom: 10px; }
   }
 
-  /* Telas muito altas (notch/dynamic island) */
   @supports (padding: max(0px)) {
     .topbar-inner { padding-left: max(var(--pad-x), env(safe-area-inset-left)); padding-right: max(var(--pad-x), env(safe-area-inset-right)); }
     .hero-inner { padding-left: max(var(--pad-x), env(safe-area-inset-left)); padding-right: max(var(--pad-x), env(safe-area-inset-right)); }
@@ -1171,7 +1201,6 @@
     }
   }
 
-  /* Impressão */
   @media print {
     .topbar, #acessibilidade, .back-btn, .dropzone, .status-line, .meta-strip { display: none !important; }
     body { background: #fff; }
@@ -1227,18 +1256,38 @@
     </span>
   </div>
 
-  <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-label="Selecionar arquivo zip">
-    <input type="file" id="fileInput" accept=".zip">
-    <div class="dz-icon">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="26" height="26" aria-hidden="true">
+  <!--
+    IMPORTANTE (mobile):
+    O dropzone agora é um <label> associado ao <input type="file">.
+    Isso garante que o explorador de arquivos nativo abra em iOS e Android
+    sem depender de input.click() via JS, que é bloqueado em alguns navegadores móveis.
+  -->
+  <label class="dropzone" id="dropzone" for="fileInput">
+    <input
+      type="file"
+      id="fileInput"
+      accept=".zip,application/zip,application/x-zip-compressed,application/octet-stream"
+      aria-label="Selecionar arquivo zip do projeto LaTeX">
+    <div class="dz-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="26" height="26">
         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
         <polyline points="17 8 12 3 7 8"/>
         <line x1="12" y1="3" x2="12" y2="15"/>
       </svg>
     </div>
-    <div class="dz-title">Arraste o .zip aqui, ou clique para escolher</div>
+    <div class="dz-title">Arraste o .zip aqui, ou toque para escolher</div>
     <div class="dz-sub">Aceita o arquivo exportado do Overleaf ou compactado manualmente — só precisa conter <code>main.tex</code> e a pasta <code>secoes/</code>.</div>
-  </div>
+
+    <!-- Botão visual (só aparece em touch devices). O clique real vai pro <label>. -->
+    <span class="dz-cta" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+        <polyline points="17 8 12 3 7 8"/>
+        <line x1="12" y1="3" x2="12" y2="15"/>
+      </svg>
+      Escolher arquivo .zip
+    </span>
+  </label>
   <div class="status-line" id="statusLine" role="status" aria-live="polite"></div>
 
   <div id="report"></div>
@@ -1305,16 +1354,49 @@
     setInterval(tick, 1000);
   })();
 
-  dz.addEventListener('click', () => input.click());
-  dz.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); input.click(); } });
+  /* ============ EVENTOS DO DROPZONE ============ */
+
+  // Como o dropzone é um <label for="fileInput">, o clique já abre o explorador nativamente.
+  // Este handler só serve para fallback em casos raros (algum navegador que ignora label).
+  dz.addEventListener('click', (e) => {
+    // Se o clique foi no próprio input, não faz nada (evita duplo disparo).
+    if (e.target === input) return;
+    // Fallback: garante que o input seja acionado caso o label não funcione.
+    // Usamos setTimeout(0) para não interferir no comportamento nativo do label.
+    setTimeout(() => {
+      // Só dispara se o input realmente não foi aberto (heurística: input ainda vazio E
+      // nenhum arquivo foi escolhido). Não há como detectar "explorador aberto", então
+      // usamos um flag simples.
+      if (!window.__fileDialogOpened) {
+        try {
+          input.click();
+        } catch (err) {
+          console.warn('Fallback input.click falhou:', err);
+        }
+      }
+    }, 100);
+  });
+
+  // Marca que o explorador foi aberto quando o input recebe foco/clique
+  input.addEventListener('click', () => { window.__fileDialogOpened = true; });
+  input.addEventListener('focus', () => { window.__fileDialogOpened = true; });
+
+  // Reset do flag quando o input perde foco sem escolher arquivo
+  input.addEventListener('blur', () => {
+    setTimeout(() => { window.__fileDialogOpened = false; }, 500);
+  });
+
+  input.addEventListener('change', e => {
+    window.__fileDialogOpened = false;
+    const f = e.target.files && e.target.files[0];
+    if (f) handleFile(f);
+  });
+
+  // Drag & drop (desktop)
   ['dragover','dragenter'].forEach(ev => dz.addEventListener(ev, e => { e.preventDefault(); dz.classList.add('drag'); }));
   ['dragleave','drop'].forEach(ev => dz.addEventListener(ev, e => { e.preventDefault(); dz.classList.remove('drag'); }));
   dz.addEventListener('drop', e => {
     const f = e.dataTransfer.files && e.dataTransfer.files[0];
-    if (f) handleFile(f);
-  });
-  input.addEventListener('change', e => {
-    const f = e.target.files && e.target.files[0];
     if (f) handleFile(f);
   });
 
@@ -1343,7 +1425,6 @@
 
   function pathSegments(path) { return path.split('/').filter(Boolean); }
 
-  /* ============ MOSTRAR / ESCONDER TELA INICIAL ============ */
   function hideInitialUI() {
     dz.classList.add('hidden');
     metaStrip.classList.add('hidden');
@@ -1591,7 +1672,6 @@
 
     let html = '';
 
-    /* Botão voltar */
     html += `<button class="back-btn" id="backBtn" type="button">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <line x1="19" y1="12" x2="5" y2="12"/>
@@ -1600,7 +1680,6 @@
       Voltar
     </button>`;
 
-    /* Resumo */
     html += `<div class="summary">
       <div class="stamp-wrap">${stampSVG(r.total, 2.5)}</div>
       <div class="summary-meta">
@@ -1615,7 +1694,6 @@
       </div>
     </div>`;
 
-    /* Bloco 01 — Estrutura */
     html += `<section class="block">
       <div class="block-head">
         <div class="block-title"><span class="block-num">01</span> Estrutura de arquivos e pastas</div>
@@ -1627,7 +1705,6 @@
     }
     html += `</div></section>`;
 
-    /* Bloco 02 — Seções */
     html += `<section class="block">
       <div class="block-head">
         <div class="block-title"><span class="block-num">02</span> Texto e figura por seção</div>
@@ -1639,7 +1716,6 @@
     }
     html += `</div></section>`;
 
-    /* Bloco 03 — Tabela e lista */
     html += `<section class="block">
       <div class="block-head">
         <div class="block-title"><span class="block-num">03</span> Tabela e lista</div>
@@ -1664,7 +1740,6 @@
     report.innerHTML = html;
     report.classList.add('show');
 
-    /* Anima as barras após render */
     requestAnimationFrame(() => {
       document.querySelectorAll('.secao-bar-fill').forEach(el => {
         el.style.width = el.getAttribute('data-pct') + '%';
@@ -1673,7 +1748,6 @@
       if (fill) fill.style.width = pctTotal + '%';
     });
 
-    /* Botão voltar */
     document.getElementById('backBtn').addEventListener('click', () => {
       showInitialUI();
       window.scrollTo({ top: 0, behavior: 'smooth' });

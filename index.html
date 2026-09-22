@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#0f3d2e">
 <title>Conferência LaTeX — IFPA Marabá Industrial</title>
-<meta name="description" content="Verificador completo de estrutura do relatório técnico LaTeX — Projeto Integrador, IFPA Campus Marabá Industrial. Valida os 5,0 pontos da etapa de LaTeX.">
+<meta name="description" content="Verificador completo de estrutura do relatório técnico LaTeX — Projeto Integrador, IFPA Campus Marabá Industrial. Valida os 2,50 pts automatizáveis + alerta de seções extras.">
 <meta name="author" content="IFPA Campus Marabá Industrial">
 <link rel="icon" href="fev.ico" type="image/x-icon">
 
@@ -685,7 +685,7 @@
     font-size: 13px;
     line-height: 1.6;
     color: var(--ink-subtle);
-    max-width: 56ch;
+    max-width: 60ch;
     margin: 0;
   }
 
@@ -802,6 +802,7 @@
 
   .block-score.full { color: var(--pass); background: var(--pass-soft); border-color: transparent; }
   .block-score.zero { color: var(--fail); background: var(--fail-soft); border-color: transparent; }
+  .block-score.warn { color: var(--warn); background: var(--warn-soft); border-color: transparent; }
 
   /* ============ ROWS ============ */
   .rows-card {
@@ -1013,6 +1014,50 @@
     word-break: break-word;
   }
 
+  /* ============ ALERTA ============ */
+  .alert {
+    display: flex;
+    gap: 14px;
+    padding: 18px 20px;
+    border-radius: var(--radius-md);
+    background: var(--warn-soft);
+    border: 1px solid rgba(168,118,31,0.25);
+    margin-top: 16px;
+  }
+
+  .alert svg { width: 20px; height: 20px; color: var(--warn); flex-shrink: 0; margin-top: 2px; }
+
+  .alert .alert-txt {
+    font-size: 13.5px;
+    line-height: 1.6;
+    color: var(--ink-muted);
+    margin: 0;
+  }
+
+  .alert .alert-txt strong { color: var(--warn); font-weight: 700; }
+
+  .alert .alert-txt code {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--brand-green-2);
+    background: var(--surface);
+    padding: 1px 6px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+  }
+
+  .alert .alert-txt ul {
+    margin: 8px 0 0;
+    padding-left: 20px;
+  }
+
+  .alert .alert-txt li {
+    margin-bottom: 4px;
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    color: var(--ink);
+  }
+
   /* ============ CHECKLIST ============ */
   .checklist {
     background: var(--surface);
@@ -1097,6 +1142,16 @@
   }
 
   .info-box .info-txt strong { color: var(--info); font-weight: 600; }
+
+  .info-box .info-txt code {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--brand-green-2);
+    background: var(--surface);
+    padding: 1px 5px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+  }
 
   /* ============ FOOTER ============ */
   footer.foot {
@@ -1247,6 +1302,9 @@
     .checklist li { font-size: 13px; }
     .checklist li code { font-size: 11.5px; }
 
+    .alert { padding: 14px 16px; gap: 10px; }
+    .alert .alert-txt { font-size: 13px; }
+
     footer.foot { font-size: 12px; margin-top: 32px; padding-top: 20px; }
 
     #acessibilidade {
@@ -1367,7 +1425,7 @@
       Solte o <code>.zip</code> do seu projeto abaixo. A checagem roda inteiramente no seu navegador —
       nada é enviado a nenhum servidor — e aplica <strong>todos os critérios verificáveis por script</strong>
       descritos no documento oficial: estrutura de pastas, texto e figura por seção, tabela, lista
-      e a rubrica completa de <strong>5,0 pontos</strong> da etapa de LaTeX.
+      e a rubrica completa de <strong>2,50 pts</strong> verificáveis + <strong>2,50 pts</strong> de Defesa de Autoria = <strong>5,0 pts</strong>.
     </p>
   </div>
 </section>
@@ -1462,19 +1520,23 @@
   };
 
   const MIN_CHARS = 200;
-  const PONTOS_TOTAL = 5.0;
 
   // Rubrica oficial (matriz do documento):
   // 0,5 pt — Envio do .zip correto com estrutura intacta
   // 1,0 pt — 1+ figura com caption em CADA uma das 5 seções (0,2 pt/seção)
-  // 1,0 pt — 1+ tabela E 1+ lista (0,5 + 0,5)
-  // 2,5 pt — Defesa de Autoria (entrevista presencial — NÃO automatizável)
+  // 0,5 pt — 1+ tabela
+  // 0,5 pt — 1+ lista
+  // = 2,5 pts automatizáveis
+  // + 2,5 pts Defesa de Autoria (não automatizável)
+  // = 5,0 pts totais
   const PONTOS_ESTRUTURA = 0.5;
   const PONTOS_FIGURAS_TOTAL = 1.0;
   const PONTOS_FIGURA_POR_SECAO = PONTOS_FIGURAS_TOTAL / SECOES.length; // 0.2
   const PONTOS_TABELA = 0.5;
   const PONTOS_LISTA = 0.5;
+  const PONTOS_AUTOMATIZAVEIS = PONTOS_ESTRUTURA + PONTOS_FIGURAS_TOTAL + PONTOS_TABELA + PONTOS_LISTA; // 2.5
   const PONTOS_DEFESA = 2.5;
+  const PONTOS_TOTAL_ETAPA = PONTOS_AUTOMATIZAVEIS + PONTOS_DEFESA; // 5.0
 
   const RE_FIGURE = /\\begin\{figure\}[\s\S]*?\\end\{figure\}/g;
   const RE_CAPTION = /\\caption\s*\{/;
@@ -1598,13 +1660,14 @@
     return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   }
 
+  function round2(n) { return Math.round(n * 100) / 100; }
+
   /* =========================================================
      HANDLE FILE
      ========================================================= */
   async function handleFile(file) {
     const nameLower = file.name.toLowerCase();
 
-    // Validação de formato inválido
     const formatoInvalido = FORMATOS_INVALIDOS.find(ext => nameLower.endsWith(ext));
     if (formatoInvalido) {
       setStatus(`Formato "${formatoInvalido}" não aceito. Envie um .zip (não .rar, .7z ou .tar.gz).`, true);
@@ -1652,7 +1715,29 @@
     ];
     const pontosEstrutura = estruturaOk ? PONTOS_ESTRUTURA : 0;
 
-    // 2) Seções — texto + figura com caption (1,0 pt total = 0,2/seção)
+    // 2) Detecção de seções extras (fora das 5 oficiais)
+    const secoesExtra = [];
+    const secoesPaths = new Map();
+    for (const e of texEntries) {
+      const segs = pathSegments(e.name);
+      if (segs.includes('secoes')) {
+        const idx = segs.indexOf('secoes');
+        const sub = segs[idx + 1];
+        const file = segs[segs.length - 1];
+        if (file.endsWith('.tex') && sub !== 'main.tex') {
+          if (!secoesPaths.has(sub)) secoesPaths.set(sub, []);
+          secoesPaths.get(sub).push(file);
+        }
+      }
+    }
+    for (const [sub, files] of secoesPaths) {
+      const nomeBase = sub.replace(/\.tex$/, '');
+      if (!SECOES.includes(nomeBase)) {
+        secoesExtra.push({ pasta: sub, arquivos: files });
+      }
+    }
+
+    // 3) Seções — figura com caption (1,0 pt total = 0,2/seção)
     const arquivosSecao = {};
     for (const secao of SECOES) {
       const nomeAlvo = secao + '.tex';
@@ -1685,12 +1770,11 @@
       const figuras = texto.match(RE_FIGURE) || [];
       const temCaption = figuras.some(fig => RE_CAPTION.test(fig));
       const temInclude = figuras.some(fig => RE_INCLUDEGRAPHICS.test(fig));
-      const temFigura = temCaption; // critério oficial: figura COM caption
+      const temFigura = temCaption;
 
       const captionSemFigure = RE_CAPTION.test(texto) && figuras.length === 0;
       const figuraSemCaption = figuras.length > 0 && !temCaption;
 
-      // Pontuação: 0,2 pt apenas se figura com caption estiver presente
       const pontos = temFigura ? PONTOS_FIGURA_POR_SECAO : 0;
       somaPontosFiguras += pontos;
 
@@ -1702,9 +1786,9 @@
         pontos
       };
     }
-    somaPontosFiguras = Math.round(somaPontosFiguras * 100) / 100;
+    somaPontosFiguras = round2(somaPontosFiguras);
 
-    // 3) Tabela e Lista (0,5 + 0,5 = 1,0 pt)
+    // 4) Tabela e Lista (0,5 + 0,5 = 1,0 pt)
     let temTabela = false, temLista = false;
     let tabelaEm = null, listaEm = null;
     for (const e of texEntries) {
@@ -1722,35 +1806,41 @@
     const pontosLista = temLista ? PONTOS_LISTA : 0;
     const pontosTabLista = pontosTabela + pontosLista;
 
-    // Total automatizável (sem Defesa de Autoria)
-    const totalAutomatizavel = Math.round((pontosEstrutura + somaPontosFiguras + pontosTabLista) * 100) / 100;
-    const totalGeral = Math.round((totalAutomatizavel + PONTOS_DEFESA) * 100) / 100; // 5,0 se defesa ok
+    // 5) Total automatizável
+    const totalAutomatizavel = round2(pontosEstrutura + somaPontosFiguras + pontosTabLista);
 
-    // Detecção de \begin{document} no main.tex (indício de compilação viável)
+    // 6) Detecção de \begin{document} no main.tex
     let mainTemDocument = false;
     if (mainTex) {
       const rawMain = await mainTex.async('string');
       mainTemDocument = RE_BEGIN_DOC.test(stripComments(rawMain));
     }
 
+    // 7) Penalidade por seções extras (informativa, não desconta automaticamente)
+    const penalidadeSecoesExtras = 0; // apenas informativo
+
     return {
       estruturaOk, estruturaDetalhes, pontosEstrutura,
       secaoInfo, pontosFiguras: somaPontosFiguras,
       temTabela, temLista, tabelaEm, listaEm,
       pontosTabela, pontosLista, pontosTabLista,
-      totalAutomatizavel, totalGeral,
+      totalAutomatizavel,
+      maxAutomatizavel: PONTOS_AUTOMATIZAVEIS,
       texCount: texEntries.length,
       mainTemDocument,
-      temMain: !!mainTex
+      temMain: !!mainTex,
+      secoesExtra,
+      penalidadeSecoesExtras
     };
   }
 
   /* =========================================================
      RENDER
      ========================================================= */
-  function scoreColor(total) {
-    if (total >= 2.3) return getVar('--pass-bright');
-    if (total >= 1.3) return getVar('--warn');
+  function scoreColor(total, max) {
+    const pct = total / max;
+    if (pct >= 0.9) return getVar('--pass-bright');
+    if (pct >= 0.5) return getVar('--warn');
     return getVar('--fail');
   }
   function getVar(name) {
@@ -1761,7 +1851,7 @@
     const pct = Math.max(0, Math.min(1, total / max));
     const r = 54, c = 2 * Math.PI * r;
     const dashTarget = c * (1 - pct);
-    const color = scoreColor(total);
+    const color = scoreColor(total, max);
     return `
       <svg class="stamp" viewBox="0 0 132 132" role="img" aria-label="Pontuação ${total.toFixed(2)} de ${max.toFixed(2)}"
            style="--dash-full:${c}; --dash-target:${dashTarget};">
@@ -1814,7 +1904,6 @@
 
     html += `<div class="crit-list">`;
 
-    // Texto
     html += `<div class="crit ${info.temTexto ? 'ok' : 'no'}">
       <span class="mark ${info.temTexto ? 'ok' : 'no'}">${info.temTexto ? '✓' : '✗'}</span>
       <span class="txt">texto ≥ <b>${MIN_CHARS}</b> caracteres ${
@@ -1824,7 +1913,6 @@
       }</span>
     </div>`;
 
-    // Figura
     let figTxt = 'figura com <code>\\caption</code>';
     if (info.temFigura) {
       figTxt += ' — encontrada';
@@ -1847,19 +1935,19 @@
   }
 
   function renderReport(filename, r) {
-    const pctTotal = Math.round((r.totalAutomatizavel / 3.0) * 100); // 3,0 = parte não-defesa
-    const maxAutomatizavel = 3.0;
+    const maxAutomatizavel = r.maxAutomatizavel; // 2.5
+    const pctTotal = Math.round((r.totalAutomatizavel / maxAutomatizavel) * 100);
 
     let verdictClass, verdictTxt;
-    if (r.totalAutomatizavel >= 3.0) {
+    if (r.totalAutomatizavel >= maxAutomatizavel) {
       verdictClass = 'pos';
       verdictTxt = 'Todos os critérios automatizáveis foram atendidos.';
-    } else if (r.totalAutomatizavel >= 1.5) {
+    } else if (r.totalAutomatizavel >= maxAutomatizavel * 0.6) {
       verdictClass = 'neu';
-      verdictTxt = 'Bom progresso — ainda faltam itens para os 3,0 pts verificáveis.';
+      verdictTxt = `Bom progresso — ainda faltam ${(maxAutomatizavel - r.totalAutomatizavel).toFixed(2)} pt para o total de ${maxAutomatizavel.toFixed(2)} pts verificáveis.`;
     } else if (r.totalAutomatizavel > 0) {
       verdictClass = 'neg';
-      verdictTxt = 'Ainda faltam vários itens para atingir os 3,0 pts verificáveis.';
+      verdictTxt = `Ainda faltam vários itens para atingir os ${maxAutomatizavel.toFixed(2)} pts verificáveis.`;
     } else {
       verdictClass = 'neg';
       verdictTxt = 'Nenhum critério automático foi atendido — reveja a estrutura.';
@@ -1882,9 +1970,9 @@
         <div class="summary-file">${escapeHtml(filename)}</div>
         <h2 class="summary-verdict"><span class="${verdictClass}">${verdictTxt}</span></h2>
         <p class="summary-note">
-          Esta conferência cobre <strong>${maxAutomatizavel.toFixed(1)} pts</strong> (estrutura + figuras + tabela/lista).
-          Os outros <strong>2,5 pts</strong> vêm da <strong>Defesa de Autoria</strong>, avaliada presencialmente com 3 perguntas geradas por IA a partir do seu texto.
-          Total da etapa LaTeX: <strong>5,0 pts</strong>.
+          Esta conferência cobre <strong>${maxAutomatizavel.toFixed(2)} pts</strong> (estrutura + figuras + tabela/lista).
+          Os outros <strong>2,50 pts</strong> vêm da <strong>Defesa de Autoria</strong>, avaliada presencialmente com 3 perguntas geradas por IA a partir do seu texto.
+          Total da etapa LaTeX: <strong>5,00 pts</strong>.
         </p>
       </div>
       <div class="summary-bar-wrap">
@@ -1904,7 +1992,6 @@
     for (const d of r.estruturaDetalhes) {
       html += row(d.ok, d.label, d.detail);
     }
-    // Bônus: detecção de \begin{document}
     html += row(r.mainTemDocument, 'main.tex contém \\begin{document}',
       r.mainTemDocument
         ? 'encontrado — indício de documento LaTeX completo'
@@ -1977,10 +2064,57 @@
       </div>
     </section>`;
 
-    // BLOCO 04 — Defesa de Autoria (2,5 pts) — não automatizável
+    // BLOCO 04 — Diagnóstico de seções extras (NOVO)
+    if (r.secoesExtra.length > 0) {
+      html += `<section class="block">
+        <div class="block-head">
+          <div class="block-title"><span class="block-num">04</span> Seções extras detectadas</div>
+          <div class="block-score warn">⚠ atenção</div>
+        </div>
+        <div class="alert">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+            <line x1="12" y1="9" x2="12" y2="13"/>
+            <line x1="12" y1="17" x2="12.01" y2="17"/>
+          </svg>
+          <p class="alert-txt">
+            <strong>Atenção:</strong> foram encontradas pastas em <code>secoes/</code> que <strong>não estão na lista oficial das 5 seções</strong> do template
+            (<code>introducao</code>, <code>fundamentacao_teorica</code>, <code>metodologia</code>, <code>resultados</code>, <code>consideracoes_finais</code>).
+            O script Python do professor pode penalizar seções extras, especialmente se a tabela ou lista estiver nelas.
+            <ul>
+              ${r.secoesExtra.map(s => `<li><code>secoes/${escapeHtml(s.pasta)}/</code> → ${s.arquivos.map(a => '<code>' + escapeHtml(a) + '</code>').join(', ')}</li>`).join('')}
+            </ul>
+          </p>
+        </div>
+        <div class="info-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="16" x2="12" y2="12"/>
+            <line x1="12" y1="8" x2="12.01" y2="8"/>
+          </svg>
+          <p class="info-txt">
+            <strong>Recomendação:</strong> mova qualquer tabela ou lista que esteja em uma seção extra para
+            uma das 5 seções oficiais (ex.: <code>resultados.tex</code>). Depois, remova a pasta extra do <code>.zip</code>
+            e remova o <code>\\input{secoes/&lt;extra&gt;/&lt;extra&gt;}</code> do <code>main.tex</code>. Isso evita desconto de 0,50 pt.
+          </p>
+        </div>
+      </section>`;
+    } else {
+      html += `<section class="block">
+        <div class="block-head">
+          <div class="block-title"><span class="block-num">04</span> Seções extras detectadas</div>
+          <div class="block-score full">✓ nenhuma</div>
+        </div>
+        <div class="rows-card">
+          ${row(true, 'Estrutura de secoes/ alinhada ao template oficial', 'Apenas as 5 seções oficiais foram encontradas. Nenhuma pasta extra dentro de secoes/.')}
+        </div>
+      </section>`;
+    }
+
+    // BLOCO 05 — Defesa de Autoria
     html += `<section class="block">
       <div class="block-head">
-        <div class="block-title"><span class="block-num">04</span> Defesa de Autoria (presencial)</div>
+        <div class="block-title"><span class="block-num">05</span> Defesa de Autoria (presencial)</div>
         <div class="block-score">${PONTOS_DEFESA.toFixed(2)} / ${PONTOS_DEFESA.toFixed(2)}</div>
       </div>
       <div class="rows-card">
@@ -1998,16 +2132,16 @@
           <line x1="12" y1="8" x2="12.01" y2="8"/>
         </svg>
         <p class="info-txt">
-          <strong>Total da etapa LaTeX:</strong> 3,0 pts verificáveis por script + 2,5 pts de Defesa de Autoria = <strong>5,0 pts</strong>.
-          Esta ferramenta cobre apenas os 3,0 pts automatizáveis.
+          <strong>Total da etapa LaTeX:</strong> 2,50 pts verificáveis por script + 2,50 pts de Defesa de Autoria = <strong>5,00 pts</strong>.
+          Esta ferramenta cobre apenas os 2,50 pts automatizáveis.
         </p>
       </div>
     </section>`;
 
-    // BLOCO 05 — Checklist pré-envio
+    // BLOCO 06 — Checklist pré-envio
     html += `<section class="block">
       <div class="block-head">
-        <div class="block-title"><span class="block-num">05</span> Checklist pré-envio (SIGAA)</div>
+        <div class="block-title"><span class="block-num">06</span> Checklist pré-envio (SIGAA)</div>
       </div>
       <div class="checklist">
         <h3 class="checklist-title">

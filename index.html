@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#0f3d2e">
 <title>Conferência LaTeX — IFPA Marabá Industrial</title>
-<meta name="description" content="Verificador completo de estrutura do relatório técnico LaTeX — Projeto Integrador, IFPA Campus Marabá Industrial. Valida os 2,50 pts automatizáveis + alerta de seções extras.">
+<meta name="description" content="Verificador de estrutura do relatório técnico LaTeX — Avaliação 3º Bimestre - LaTeX, IFPA Campus Marabá Industrial. Confere os requisitos obrigatórios de estruturação (2,5 pts).">
 <meta name="author" content="IFPA Campus Marabá Industrial">
 <link rel="icon" href="fev.ico" type="image/x-icon">
 
@@ -912,37 +912,20 @@
     color: var(--ink-subtle);
   }
 
-  .secao-score {
+  .secao-status {
     font-family: var(--font-mono);
-    font-size: 12px;
+    font-size: 11.5px;
     font-weight: 700;
     white-space: nowrap;
     padding: 5px 11px;
     border-radius: 999px;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
     flex-shrink: 0;
   }
-  .secao-score.ok { color: var(--pass); background: var(--pass-soft); }
-  .secao-score.mid { color: var(--warn); background: var(--warn-soft); }
-  .secao-score.no { color: var(--fail); background: var(--fail-soft); }
-
-  .secao-bar {
-    height: 5px;
-    background: var(--surface-tint);
-    border-radius: 5px;
-    overflow: hidden;
-    margin-bottom: 14px;
-  }
-
-  .secao-bar-fill {
-    height: 100%;
-    border-radius: 5px;
-    transition: width 0.9s cubic-bezier(0.4, 0, 0.2, 1);
-    width: 0;
-  }
-  .secao-bar-fill.ok { background: var(--gradient-pass); }
-  .secao-bar-fill.mid { background: linear-gradient(90deg, var(--warn), #d9a53e); }
-  .secao-bar-fill.no { background: var(--fail); }
+  .secao-status.ok { color: var(--pass); background: var(--pass-soft); }
+  .secao-status.mid { color: var(--warn); background: var(--warn-soft); }
+  .secao-status.no { color: var(--fail); background: var(--fail-soft); }
 
   .secao-detalhe {
     font-family: var(--font-sans);
@@ -1175,31 +1158,6 @@
     border-radius: 4px;
   }
 
-  /* ============ ACESSIBILIDADE ============ */
-  #acessibilidade {
-    position: fixed;
-    bottom: calc(22px + env(safe-area-inset-bottom));
-    right: 22px;
-    z-index: 50;
-    width: 48px; height: 48px;
-    border-radius: 50%;
-    border: none;
-    background: var(--gradient-primary);
-    color: #fff;
-    display: grid;
-    place-items: center;
-    cursor: pointer;
-    box-shadow: 0 8px 24px -8px rgba(17,105,67,0.5);
-    transition: transform 0.2s ease;
-    -webkit-tap-highlight-color: transparent;
-  }
-  #acessibilidade:hover { transform: scale(1.06); }
-  #acessibilidade:active { transform: scale(0.96); }
-  #acessibilidade svg { width: 22px; height: 22px; }
-
-  #vlibras-widget [vw-access-button] { display: none !important; }
-  #vlibras-access-wrapper { display: none !important; }
-
   /* ============ RESPONSIVIDADE ============ */
   @media (max-width: 1024px) {
     :root { --container: 100%; }
@@ -1289,7 +1247,7 @@
     .secao-nome { gap: 8px; }
     .secao-nome .arquivo { font-size: 13px; }
     .secao-nome .label { font-size: 12px; }
-    .secao-score { font-size: 11px; padding: 4px 10px; }
+    .secao-status { font-size: 10.5px; padding: 4px 10px; }
 
     .secao-detalhe { font-size: 12px; margin-bottom: 12px; gap: 6px; }
     .meta-chip { font-size: 10.5px; padding: 3px 7px; }
@@ -1306,13 +1264,6 @@
     .alert .alert-txt { font-size: 13px; }
 
     footer.foot { font-size: 12px; margin-top: 32px; padding-top: 20px; }
-
-    #acessibilidade {
-      bottom: calc(16px + env(safe-area-inset-bottom));
-      right: 16px;
-      width: 44px; height: 44px;
-    }
-    #acessibilidade svg { width: 20px; height: 20px; }
   }
 
   @media (max-width: 400px) {
@@ -1355,13 +1306,6 @@
 
     .back-btn { font-size: 12px; padding: 8px 12px; gap: 6px; }
     .back-btn svg { width: 13px; height: 13px; }
-
-    #acessibilidade {
-      width: 40px; height: 40px;
-      right: 12px;
-      bottom: calc(12px + env(safe-area-inset-bottom));
-    }
-    #acessibilidade svg { width: 18px; height: 18px; }
   }
 
   @media (max-width: 900px) and (orientation: landscape) and (max-height: 500px) {
@@ -1393,7 +1337,7 @@
   }
 
   @media print {
-    .topbar, #acessibilidade, .back-btn, .dropzone, .status-line, .meta-strip { display: none !important; }
+    .topbar, .back-btn, .dropzone, .status-line, .meta-strip { display: none !important; }
     body { background: #fff; }
     .summary { box-shadow: none; border: 1px solid #ccc; }
   }
@@ -1419,13 +1363,13 @@
 
 <section class="hero" id="hero">
   <div class="hero-inner">
-    <div class="eyebrow">Campus Marabá Industrial · Projeto Integrador · 3º Bimestre 2026</div>
+    <div class="eyebrow">Campus Marabá Industrial · Avaliação 3º Bimestre - LaTeX · Conferência pré-envio</div>
     <h1>Conferência de estrutura do <span class="accent">relatório LaTeX</span></h1>
     <p class="lede">
       Solte o <code>.zip</code> do seu projeto abaixo. A checagem roda inteiramente no seu navegador —
-      nada é enviado a nenhum servidor — e aplica <strong>todos os critérios verificáveis por script</strong>
-      descritos no documento oficial: estrutura de pastas, texto e figura por seção, tabela, lista
-      e a rubrica completa de <strong>2,50 pts</strong> verificáveis + <strong>2,50 pts</strong> de Defesa de Autoria = <strong>5,0 pts</strong>.
+      nada é enviado a nenhum servidor — e verifica os <strong>requisitos obrigatórios de estruturação LaTeX</strong>
+      (2,5 pts) descritos no documento oficial: preenchimento das 5 seções, figura com <code>\caption</code>
+      em cada seção, tabela científica e listas.
     </p>
   </div>
 </section>
@@ -1433,23 +1377,23 @@
 <main>
   <div class="meta-strip" id="metaStrip" role="status" aria-live="polite">
     <span class="item">
-      <span class="label">Disciplina</span>
-      <span class="value">Projeto Integrador</span>
+      <span class="label">Avaliação</span>
+      <span class="value">3º Bimestre - LaTeX</span>
     </span>
     <span class="sep" aria-hidden="true"></span>
     <span class="item">
-      <span class="label">Bimestre</span>
-      <span class="value">3º · 2026</span>
+      <span class="label">Etapa</span>
+      <span class="value">Relatório LaTeX</span>
     </span>
     <span class="sep" aria-hidden="true"></span>
     <span class="item">
-      <span class="label">Prazo</span>
-      <span class="value">27/09/2026 · 23:59</span>
+      <span class="label">Pontuação verificável</span>
+      <span class="value">2,5 pts</span>
     </span>
     <span class="sep" aria-hidden="true"></span>
     <span class="item">
-      <span class="label">Etapa LaTeX</span>
-      <span class="value">5,0 pts</span>
+      <span class="label">Envio</span>
+      <span class="value">Exclusivamente via SIGAA · arquivo .zip</span>
     </span>
   </div>
 
@@ -1469,7 +1413,8 @@
     <div class="dz-title">Arraste o .zip aqui, ou toque para escolher</div>
     <div class="dz-sub">
       Aceita apenas <code>.zip</code> — não use <code>.rar</code>, <code>.7z</code> ou <code>.tar.gz</code>.
-      O arquivo deve conter <code>main.tex</code>, a pasta <code>secoes/</code> e a pasta <code>configuracao/</code>.
+      O arquivo deve conter <code>main.tex</code>, a pasta <code>secoes/</code>, a pasta <code>configuracao/</code>
+      e a pasta de imagens (se houver).
     </div>
     <span class="dz-warn">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -1477,7 +1422,7 @@
         <line x1="12" y1="9" x2="12" y2="13"/>
         <line x1="12" y1="17" x2="12.01" y2="17"/>
       </svg>
-      Envio exclusivo via SIGAA — não aceito por e-mail/chat
+      Não envie apenas o PDF final — envie o .zip com o código-fonte
     </span>
     <span class="dz-cta" aria-hidden="true">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1493,22 +1438,23 @@
   <div id="report"></div>
 </main>
 
-<button id="acessibilidade" aria-label="Abrir opções de acessibilidade (Alt+4)" aria-expanded="false" type="button">
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-    <circle cx="16" cy="4" r="1"></circle>
-    <path d="m18 19 1-7-6 1"></path>
-    <path d="m5 8 3-3 5.5 3-2.36 3.5"></path>
-    <path d="M4.24 14.5a5 5 0 0 0 6.88 6"></path>
-    <path d="M13.76 17.5a5 5 0 0 0-6.88-6"></path>
-  </svg>
-</button>
+<div id="vlibras-widget" vw class="enabled">
+  <div vw-access-button class="active"></div>
+  <div vw-plugin-wrapper>
+    <div class="vw-plugin-top-wrapper"></div>
+  </div>
+</div>
+<script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+<script>
+  new window.VLibras.Widget('https://vlibras.gov.br/app');
+</script>
 
 <script>
 (function(){
   'use strict';
 
   /* =========================================================
-     CONSTANTES — 100% alinhadas ao documento de instruções
+     CONSTANTES — alinhadas ao documento oficial
      ========================================================= */
   const SECOES = ["introducao","fundamentacao_teorica","metodologia","resultados","consideracoes_finais"];
   const SECOES_LABEL = {
@@ -1519,24 +1465,11 @@
     consideracoes_finais: "Considerações Finais"
   };
 
-  const MIN_CHARS = 200;
+  // Heurística interna (o PDF não define mínimo de caracteres).
+  const MIN_CHARS_HEURISTICA = 200;
 
-  // Rubrica oficial (matriz do documento):
-  // 0,5 pt — Envio do .zip correto com estrutura intacta
-  // 1,0 pt — 1+ figura com caption em CADA uma das 5 seções (0,2 pt/seção)
-  // 0,5 pt — 1+ tabela
-  // 0,5 pt — 1+ lista
-  // = 2,5 pts automatizáveis
-  // + 2,5 pts Defesa de Autoria (não automatizável)
-  // = 5,0 pts totais
-  const PONTOS_ESTRUTURA = 0.5;
-  const PONTOS_FIGURAS_TOTAL = 1.0;
-  const PONTOS_FIGURA_POR_SECAO = PONTOS_FIGURAS_TOTAL / SECOES.length; // 0.2
-  const PONTOS_TABELA = 0.5;
-  const PONTOS_LISTA = 0.5;
-  const PONTOS_AUTOMATIZAVEIS = PONTOS_ESTRUTURA + PONTOS_FIGURAS_TOTAL + PONTOS_TABELA + PONTOS_LISTA; // 2.5
-  const PONTOS_DEFESA = 2.5;
-  const PONTOS_TOTAL_ETAPA = PONTOS_AUTOMATIZAVEIS + PONTOS_DEFESA; // 5.0
+  // Critérios oficiais — bloco de estruturação vale 2,5 pts no total.
+  const PONTOS_BLOCO_ESTRUTURACAO = 2.5;
 
   const RE_FIGURE = /\\begin\{figure\}[\s\S]*?\\end\{figure\}/g;
   const RE_CAPTION = /\\caption\s*\{/;
@@ -1599,24 +1532,6 @@
     if (f) handleFile(f);
   });
 
-  document.getElementById('acessibilidade').addEventListener('click', function() {
-    const widget = window.VLibrasWidget;
-    const widgetRoot = document.getElementById('vlibras-app-root');
-    const expanded = widgetRoot?.dataset.active === 'true'
-      || this.getAttribute('aria-expanded') === 'true';
-
-    if (expanded) {
-      if (widgetRoot) widgetRoot.dataset.active = 'false';
-      this.setAttribute('aria-expanded', 'false');
-      return;
-    }
-
-    if (widget && typeof widget.open === 'function') {
-      widget.open();
-      this.setAttribute('aria-expanded', 'true');
-    }
-  });
-
   /* =========================================================
      HELPERS
      ========================================================= */
@@ -1660,8 +1575,6 @@
     return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   }
 
-  function round2(n) { return Math.round(n * 100) / 100; }
-
   /* =========================================================
      HANDLE FILE
      ========================================================= */
@@ -1696,7 +1609,7 @@
   }
 
   /* =========================================================
-     ANÁLISE — 100% fiel ao documento
+     ANÁLISE
      ========================================================= */
   async function analyze(zip) {
     const entries = Object.values(zip.files).filter(e => !e.dir);
@@ -1706,16 +1619,76 @@
     const temConfiguracao = entries.some(e => pathSegments(e.name).includes('configuracao'));
     const temSecoesFolder = entries.some(e => pathSegments(e.name).includes('secoes'));
 
-    // 1) Estrutura (0,5 pt)
     const estruturaOk = !!mainTex && temConfiguracao && temSecoesFolder;
     const estruturaDetalhes = [
       { ok: !!mainTex, label: 'main.tex', detail: mainTex ? mainTex.name : 'não encontrado' },
       { ok: temConfiguracao, label: 'pasta configuracao/', detail: temConfiguracao ? 'encontrada' : 'não encontrada' },
       { ok: temSecoesFolder, label: 'pasta secoes/', detail: temSecoesFolder ? 'encontrada' : 'não encontrada' },
     ];
-    const pontosEstrutura = estruturaOk ? PONTOS_ESTRUTURA : 0;
 
-    // 2) Detecção de seções extras (fora das 5 oficiais)
+    const arquivosSecao = {};
+    for (const secao of SECOES) {
+      const nomeAlvo = secao + '.tex';
+      const found = texEntries.find(e => {
+        const segs = pathSegments(e.name);
+        return segs[segs.length - 1] === nomeAlvo && segs.includes('secoes');
+      });
+      if (found) arquivosSecao[secao] = found;
+    }
+
+    const secaoInfo = {};
+    let secoesComTexto = 0;
+    let secoesComFigura = 0;
+
+    for (const secao of SECOES) {
+      const f = arquivosSecao[secao];
+      if (!f) {
+        secaoInfo[secao] = {
+          existe: false, temTexto: false, chars: 0,
+          temFigura: false, temCaption: false, temInclude: false,
+          figuraSemCaption: false, captionSemFigure: false,
+          arquivo: null
+        };
+        continue;
+      }
+      const raw = await f.async('string');
+      const texto = stripComments(raw);
+      const chars = texto.trim().length;
+      const temTexto = chars >= MIN_CHARS_HEURISTICA;
+
+      const figuras = texto.match(RE_FIGURE) || [];
+      const temCaption = figuras.some(fig => RE_CAPTION.test(fig));
+      const temInclude = figuras.some(fig => RE_INCLUDEGRAPHICS.test(fig));
+      const temFigura = temCaption;
+
+      const captionSemFigure = RE_CAPTION.test(texto) && figuras.length === 0;
+      const figuraSemCaption = figuras.length > 0 && !temCaption;
+
+      if (temTexto) secoesComTexto++;
+      if (temFigura) secoesComFigura++;
+
+      secaoInfo[secao] = {
+        existe: true, temTexto, chars,
+        temFigura, temCaption, temInclude,
+        figuraSemCaption, captionSemFigure,
+        arquivo: f.name
+      };
+    }
+
+    let temTabela = false, temLista = false;
+    let tabelaEm = null, listaEm = null;
+    for (const e of texEntries) {
+      const raw = await e.async('string');
+      const texto = stripComments(raw);
+      if (!temTabela && (RE_TABLE.test(texto) || RE_TABULAR.test(texto))) {
+        temTabela = true; tabelaEm = e.name;
+      }
+      if (!temLista && (RE_ITEMIZE.test(texto) || RE_ENUMERATE.test(texto))) {
+        temLista = true; listaEm = e.name;
+      }
+      if (temTabela && temLista) break;
+    }
+
     const secoesExtra = [];
     const secoesPaths = new Map();
     for (const e of texEntries) {
@@ -1737,145 +1710,47 @@
       }
     }
 
-    // 3) Seções — figura com caption (1,0 pt total = 0,2/seção)
-    const arquivosSecao = {};
-    for (const secao of SECOES) {
-      const nomeAlvo = secao + '.tex';
-      const found = texEntries.find(e => {
-        const segs = pathSegments(e.name);
-        return segs[segs.length - 1] === nomeAlvo && segs.includes('secoes');
-      });
-      if (found) arquivosSecao[secao] = found;
-    }
-
-    const secaoInfo = {};
-    let somaPontosFiguras = 0;
-
-    for (const secao of SECOES) {
-      const f = arquivosSecao[secao];
-      if (!f) {
-        secaoInfo[secao] = {
-          existe: false, temTexto: false, chars: 0,
-          temFigura: false, temCaption: false, temInclude: false,
-          figuraSemCaption: false, captionSemFigure: false,
-          arquivo: null, pontos: 0
-        };
-        continue;
-      }
-      const raw = await f.async('string');
-      const texto = stripComments(raw);
-      const chars = texto.trim().length;
-      const temTexto = chars >= MIN_CHARS;
-
-      const figuras = texto.match(RE_FIGURE) || [];
-      const temCaption = figuras.some(fig => RE_CAPTION.test(fig));
-      const temInclude = figuras.some(fig => RE_INCLUDEGRAPHICS.test(fig));
-      const temFigura = temCaption;
-
-      const captionSemFigure = RE_CAPTION.test(texto) && figuras.length === 0;
-      const figuraSemCaption = figuras.length > 0 && !temCaption;
-
-      const pontos = temFigura ? PONTOS_FIGURA_POR_SECAO : 0;
-      somaPontosFiguras += pontos;
-
-      secaoInfo[secao] = {
-        existe: true, temTexto, chars,
-        temFigura, temCaption, temInclude,
-        figuraSemCaption, captionSemFigure,
-        arquivo: f.name,
-        pontos
-      };
-    }
-    somaPontosFiguras = round2(somaPontosFiguras);
-
-    // 4) Tabela e Lista (0,5 + 0,5 = 1,0 pt)
-    let temTabela = false, temLista = false;
-    let tabelaEm = null, listaEm = null;
-    for (const e of texEntries) {
-      const raw = await e.async('string');
-      const texto = stripComments(raw);
-      if (!temTabela && (RE_TABLE.test(texto) || RE_TABULAR.test(texto))) {
-        temTabela = true; tabelaEm = e.name;
-      }
-      if (!temLista && (RE_ITEMIZE.test(texto) || RE_ENUMERATE.test(texto))) {
-        temLista = true; listaEm = e.name;
-      }
-      if (temTabela && temLista) break;
-    }
-    const pontosTabela = temTabela ? PONTOS_TABELA : 0;
-    const pontosLista = temLista ? PONTOS_LISTA : 0;
-    const pontosTabLista = pontosTabela + pontosLista;
-
-    // 5) Total automatizável
-    const totalAutomatizavel = round2(pontosEstrutura + somaPontosFiguras + pontosTabLista);
-
-    // 6) Detecção de \begin{document} no main.tex
     let mainTemDocument = false;
     if (mainTex) {
       const rawMain = await mainTex.async('string');
       mainTemDocument = RE_BEGIN_DOC.test(stripComments(rawMain));
     }
 
-    // 7) Penalidade por seções extras (informativa, não desconta automaticamente)
-    const penalidadeSecoesExtras = 0; // apenas informativo
+    const criterios = [
+      { id: 'estrutura', atendido: estruturaOk,
+        label: 'Estrutura de arquivos e pastas (main.tex + secoes/ + configuracao/)' },
+      { id: 'texto', atendido: secoesComTexto === SECOES.length,
+        label: `Preenchimento das 5 seções (${secoesComTexto}/${SECOES.length})` },
+      { id: 'figuras', atendido: secoesComFigura === SECOES.length,
+        label: `Figura com \\caption em cada uma das 5 seções (${secoesComFigura}/${SECOES.length})` },
+      { id: 'tabela', atendido: temTabela,
+        label: 'Tabela científica (table ou tabular)' },
+      { id: 'lista', atendido: temLista,
+        label: 'Lista (itemize ou enumerate)' },
+    ];
+    const totalAtendidos = criterios.filter(c => c.atendido).length;
+    const totalCriterios = criterios.length;
 
     return {
-      estruturaOk, estruturaDetalhes, pontosEstrutura,
-      secaoInfo, pontosFiguras: somaPontosFiguras,
+      estruturaOk, estruturaDetalhes,
+      secaoInfo, secoesComTexto, secoesComFigura,
       temTabela, temLista, tabelaEm, listaEm,
-      pontosTabela, pontosLista, pontosTabLista,
-      totalAutomatizavel,
-      maxAutomatizavel: PONTOS_AUTOMATIZAVEIS,
       texCount: texEntries.length,
       mainTemDocument,
       temMain: !!mainTex,
       secoesExtra,
-      penalidadeSecoesExtras
+      criterios, totalAtendidos, totalCriterios,
+      pontosBloco: PONTOS_BLOCO_ESTRUTURACAO
     };
   }
 
   /* =========================================================
      RENDER
      ========================================================= */
-  function scoreColor(total, max) {
-    const pct = total / max;
-    if (pct >= 0.9) return getVar('--pass-bright');
-    if (pct >= 0.5) return getVar('--warn');
-    return getVar('--fail');
-  }
-  function getVar(name) {
-    return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
-  }
-
-  function stampSVG(total, max) {
-    const pct = Math.max(0, Math.min(1, total / max));
-    const r = 54, c = 2 * Math.PI * r;
-    const dashTarget = c * (1 - pct);
-    const color = scoreColor(total, max);
-    return `
-      <svg class="stamp" viewBox="0 0 132 132" role="img" aria-label="Pontuação ${total.toFixed(2)} de ${max.toFixed(2)}"
-           style="--dash-full:${c}; --dash-target:${dashTarget};">
-        <circle class="ring-bg" cx="66" cy="66" r="${r}" fill="none" stroke-width="5"></circle>
-        <circle class="ring-fg" cx="66" cy="66" r="${r}" fill="none" stroke="${color}" stroke-width="5"
-          stroke-dasharray="${c}" stroke-linecap="round"
-          transform="rotate(-90 66 66)"></circle>
-        <text x="66" y="66" text-anchor="middle" class="score-num" fill="${color}">${total.toFixed(2)}</text>
-        <text x="66" y="88" text-anchor="middle" class="score-den" fill="var(--ink-subtle)">DE ${max.toFixed(2)} PTS</text>
-        <text x="66" y="26" text-anchor="middle" class="score-label" fill="var(--ink-subtle)">SCRIPT</text>
-      </svg>`;
-  }
-
-  function secaoScoreClass(pontos, max) {
-    if (pontos >= max) return 'ok';
-    if (pontos > 0) return 'mid';
-    return 'no';
-  }
-
   function renderSecao(secao, info) {
-    const max = PONTOS_FIGURA_POR_SECAO;
-    const pontos = info.pontos;
-    const cls = secaoScoreClass(pontos, max);
-    const pct = Math.round((pontos / max) * 100);
+    const ok = info.existe && info.temTexto && info.temFigura;
+    const cls = ok ? 'ok' : (info.existe ? 'mid' : 'no');
+    const label = ok ? 'atendido' : (info.existe ? 'parcial' : 'ausente');
 
     let html = `<div class="secao">
       <div class="secao-head">
@@ -1883,14 +1758,13 @@
           <span class="arquivo">${secao}.tex</span>
           <span class="label">${SECOES_LABEL[secao]}</span>
         </div>
-        <div class="secao-score ${cls}">${pontos.toFixed(2)} / ${max.toFixed(2)}</div>
-      </div>
-      <div class="secao-bar"><div class="secao-bar-fill ${cls}" data-pct="${pct}"></div></div>`;
+        <div class="secao-status ${cls}">${label}</div>
+      </div>`;
 
     if (!info.existe) {
       html += `<div class="secao-detalhe">Arquivo não encontrado dentro da pasta <code>secoes/</code>.</div>`;
       html += `<div class="crit-list">
-        <div class="crit no"><span class="mark no">✗</span><span class="txt">texto ≥ <b>${MIN_CHARS}</b> caracteres</span></div>
+        <div class="crit no"><span class="mark no">✗</span><span class="txt">texto técnico preenchido</span></div>
         <div class="crit no"><span class="mark no">✗</span><span class="txt">figura com <code>\\caption</code></span></div>
       </div></div>`;
       return html;
@@ -1904,13 +1778,12 @@
 
     html += `<div class="crit-list">`;
 
-    html += `<div class="crit ${info.temTexto ? 'ok' : 'no'}">
-      <span class="mark ${info.temTexto ? 'ok' : 'no'}">${info.temTexto ? '✓' : '✗'}</span>
-      <span class="txt">texto ≥ <b>${MIN_CHARS}</b> caracteres ${
-        info.temTexto
-          ? `— tem <b>${info.chars}</b>`
-          : `— tem <b>${info.chars}</b>, faltam <b>${MIN_CHARS - info.chars}</b>`
-      }</span>
+    const textoTxt = info.temTexto
+      ? `texto presente — ${info.chars} caractere(s) (heurística: ≥ ${MIN_CHARS_HEURISTICA})`
+      : `pouco texto — ${info.chars} caractere(s) (heurística: ≥ ${MIN_CHARS_HEURISTICA})`;
+    html += `<div class="crit ${info.temTexto ? 'ok' : 'warn'}">
+      <span class="mark ${info.temTexto ? 'ok' : 'warn'}">${info.temTexto ? '✓' : '!'}</span>
+      <span class="txt">${textoTxt}</span>
     </div>`;
 
     let figTxt = 'figura com <code>\\caption</code>';
@@ -1935,22 +1808,21 @@
   }
 
   function renderReport(filename, r) {
-    const maxAutomatizavel = r.maxAutomatizavel; // 2.5
-    const pctTotal = Math.round((r.totalAutomatizavel / maxAutomatizavel) * 100);
+    const pct = Math.round((r.totalAtendidos / r.totalCriterios) * 100);
 
     let verdictClass, verdictTxt;
-    if (r.totalAutomatizavel >= maxAutomatizavel) {
+    if (r.totalAtendidos === r.totalCriterios) {
       verdictClass = 'pos';
-      verdictTxt = 'Todos os critérios automatizáveis foram atendidos.';
-    } else if (r.totalAutomatizavel >= maxAutomatizavel * 0.6) {
+      verdictTxt = 'Todos os requisitos verificáveis foram atendidos.';
+    } else if (r.totalAtendidos >= 3) {
       verdictClass = 'neu';
-      verdictTxt = `Bom progresso — ainda faltam ${(maxAutomatizavel - r.totalAutomatizavel).toFixed(2)} pt para o total de ${maxAutomatizavel.toFixed(2)} pts verificáveis.`;
-    } else if (r.totalAutomatizavel > 0) {
+      verdictTxt = `${r.totalAtendidos} de ${r.totalCriterios} requisitos atendidos — faltam ${r.totalCriterios - r.totalAtendidos}.`;
+    } else if (r.totalAtendidos > 0) {
       verdictClass = 'neg';
-      verdictTxt = `Ainda faltam vários itens para atingir os ${maxAutomatizavel.toFixed(2)} pts verificáveis.`;
+      verdictTxt = `Apenas ${r.totalAtendidos} de ${r.totalCriterios} requisitos atendidos.`;
     } else {
       verdictClass = 'neg';
-      verdictTxt = 'Nenhum critério automático foi atendido — reveja a estrutura.';
+      verdictTxt = 'Nenhum requisito verificável foi atendido — reveja a estrutura.';
     }
 
     let html = '';
@@ -1963,30 +1835,46 @@
       Voltar
     </button>`;
 
-    // RESUMO
     html += `<div class="summary">
-      <div class="stamp-wrap">${stampSVG(r.totalAutomatizavel, maxAutomatizavel)}</div>
+      <div class="stamp-wrap">
+        <svg class="stamp" viewBox="0 0 132 132" role="img" aria-label="${r.totalAtendidos} de ${r.totalCriterios} requisitos atendidos">
+          <circle class="ring-bg" cx="66" cy="66" r="54" fill="none" stroke-width="5"></circle>
+          <circle class="ring-fg" cx="66" cy="66" r="54" fill="none"
+            stroke="${r.totalAtendidos === r.totalCriterios ? 'var(--pass-bright)' : (r.totalAtendidos >= 3 ? 'var(--warn)' : 'var(--fail)')}"
+            stroke-width="5"
+            stroke-dasharray="${2 * Math.PI * 54}"
+            stroke-dashoffset="${2 * Math.PI * 54 * (1 - r.totalAtendidos / r.totalCriterios)}"
+            stroke-linecap="round"
+            transform="rotate(-90 66 66)"></circle>
+          <text x="66" y="66" text-anchor="middle" class="score-num"
+            fill="${r.totalAtendidos === r.totalCriterios ? 'var(--pass-bright)' : (r.totalAtendidos >= 3 ? 'var(--warn)' : 'var(--fail)')}">
+            ${r.totalAtendidos}/${r.totalCriterios}
+          </text>
+          <text x="66" y="88" text-anchor="middle" class="score-den" fill="var(--ink-subtle)">REQUISITOS</text>
+          <text x="66" y="26" text-anchor="middle" class="score-label" fill="var(--ink-subtle)">SCRIPT</text>
+        </svg>
+      </div>
       <div class="summary-meta">
         <div class="summary-file">${escapeHtml(filename)}</div>
         <h2 class="summary-verdict"><span class="${verdictClass}">${verdictTxt}</span></h2>
         <p class="summary-note">
-          Esta conferência cobre <strong>${maxAutomatizavel.toFixed(2)} pts</strong> (estrutura + figuras + tabela/lista).
-          Os outros <strong>2,50 pts</strong> vêm da <strong>Defesa de Autoria</strong>, avaliada presencialmente com 3 perguntas geradas por IA a partir do seu texto.
-          Total da etapa LaTeX: <strong>5,00 pts</strong>.
+          Este relatório confere os <strong>${r.totalCriterios} requisitos obrigatórios de estruturação LaTeX</strong>
+          do documento oficial (bloco de <strong>2,5 pts</strong>). Não há pesos internos definidos pelo professor —
+          cada critério é simplesmente <strong>atendido ou não atendido</strong>. Outros pontos da etapa são
+          avaliados por outros meios e não aparecem aqui.
         </p>
       </div>
       <div class="summary-bar-wrap">
         <div class="summary-bar-label">Aproveitamento</div>
-        <div class="summary-bar-pct">${pctTotal}<span>%</span></div>
+        <div class="summary-bar-pct">${pct}<span>%</span></div>
         <div class="summary-bar"><div class="summary-bar-fill" id="summaryBarFill"></div></div>
       </div>
     </div>`;
 
-    // BLOCO 01 — Estrutura
     html += `<section class="block">
       <div class="block-head">
         <div class="block-title"><span class="block-num">01</span> Estrutura de arquivos e pastas</div>
-        <div class="block-score ${r.pontosEstrutura >= PONTOS_ESTRUTURA ? 'full' : (r.pontosEstrutura > 0 ? '' : 'zero')}">${r.pontosEstrutura.toFixed(2)} / ${PONTOS_ESTRUTURA.toFixed(2)}</div>
+        <div class="block-score ${r.estruturaOk ? 'full' : 'zero'}">${r.estruturaOk ? '✓ atendido' : '✗ não atendido'}</div>
       </div>
       <div class="rows-card">`;
     for (const d of r.estruturaDetalhes) {
@@ -1994,7 +1882,7 @@
     }
     html += row(r.mainTemDocument, 'main.tex contém \\begin{document}',
       r.mainTemDocument
-        ? 'encontrado — indício de documento LaTeX completo'
+        ? 'encontrado'
         : 'não encontrado — verifique se o main.tex está completo');
     html += `</div>
       <div class="info-box">
@@ -2010,11 +1898,12 @@
       </div>
     </section>`;
 
-    // BLOCO 02 — Figuras por seção
     html += `<section class="block">
       <div class="block-head">
-        <div class="block-title"><span class="block-num">02</span> Figura com caption em cada seção</div>
-        <div class="block-score ${r.pontosFiguras >= PONTOS_FIGURAS_TOTAL ? 'full' : (r.pontosFiguras > 0 ? '' : 'zero')}">${r.pontosFiguras.toFixed(2)} / ${PONTOS_FIGURAS_TOTAL.toFixed(2)}</div>
+        <div class="block-title"><span class="block-num">02</span> Preenchimento das seções e figuras</div>
+        <div class="block-score ${r.secoesComTexto === 5 && r.secoesComFigura === 5 ? 'full' : (r.secoesComTexto + r.secoesComFigura > 0 ? '' : 'zero')}">
+          ${r.secoesComTexto}/5 texto · ${r.secoesComFigura}/5 figura
+        </div>
       </div>
       <div class="secoes-card">`;
     for (const secao of SECOES) {
@@ -2028,24 +1917,26 @@
           <line x1="12" y1="8" x2="12.01" y2="8"/>
         </svg>
         <p class="info-txt">
-          <strong>Critério oficial:</strong> 1 figura (<code>\\begin{figure}</code>) com <code>\\caption</code> em <strong>cada uma das 5 seções</strong>.
-          Vale 0,2 pt por seção = 1,0 pt no total. Use <code>\\includegraphics</code> para carregar a imagem.
+          <strong>Critério oficial:</strong> texto técnico efetivo nas 5 seções e <strong>pelo menos 1 figura com
+          <code>\\caption</code> em cada uma das 5 seções</strong>. Use <code>\\includegraphics</code> para carregar a imagem.
+          O mínimo de caracteres exibido é apenas uma <em>heurística interna</em> — o PDF não define um valor exato.
         </p>
       </div>
     </section>`;
 
-    // BLOCO 03 — Tabela e Lista
     html += `<section class="block">
       <div class="block-head">
-        <div class="block-title"><span class="block-num">03</span> Tabela e lista</div>
-        <div class="block-score ${r.pontosTabLista >= 1.0 ? 'full' : (r.pontosTabLista > 0 ? '' : 'zero')}">${r.pontosTabLista.toFixed(2)} / 1.00</div>
+        <div class="block-title"><span class="block-num">03</span> Tabela científica e listas</div>
+        <div class="block-score ${r.temTabela && r.temLista ? 'full' : (r.temTabela || r.temLista ? '' : 'zero')}">
+          ${(r.temTabela ? 1 : 0) + (r.temLista ? 1 : 0)}/2 atendidos
+        </div>
       </div>
       <div class="rows-card">`;
-    html += row(r.temTabela, 'Tabela (0,50 pt)',
+    html += row(r.temTabela, 'Tabela científica',
       r.temTabela
         ? `encontrada em ${escapeHtml(r.tabelaEm || '—')}`
-        : `nenhuma \\begin{table} ou \\begin{tabular} encontrada em ${r.texCount} arquivo(s) .tex`);
-    html += row(r.temLista, 'Lista (0,50 pt)',
+        : `nenhum \\begin{table} ou \\begin{tabular} encontrado em ${r.texCount} arquivo(s) .tex`);
+    html += row(r.temLista, 'Lista (itemize ou enumerate)',
       r.temLista
         ? `encontrada em ${escapeHtml(r.listaEm || '—')}`
         : 'nenhum \\begin{itemize} ou \\begin{enumerate} encontrado');
@@ -2059,17 +1950,17 @@
         <p class="info-txt">
           <strong>Onde inserir:</strong> basta 1 tabela e 1 lista em <em>qualquer parte do documento</em>.
           Podem estar em arquivos diferentes. Exemplo:
-          <code>\\begin{tabular}{|c|c|} ... \\end{tabular}</code> e <code>\\begin{itemize} \\item ... \\end{itemize}</code>.
+          <code>\\begin{tabular}{|c|c|} ... \\end{tabular}</code> e
+          <code>\\begin{itemize} \\item ... \\end{itemize}</code>.
         </p>
       </div>
     </section>`;
 
-    // BLOCO 04 — Diagnóstico de seções extras (NOVO)
     if (r.secoesExtra.length > 0) {
       html += `<section class="block">
         <div class="block-head">
-          <div class="block-title"><span class="block-num">04</span> Seções extras detectadas</div>
-          <div class="block-score warn">⚠ atenção</div>
+          <div class="block-title"><span class="block-num">04</span> Observação: pastas adicionais em <code>secoes/</code></div>
+          <div class="block-score warn">⚠ observação</div>
         </div>
         <div class="alert">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -2078,70 +1969,22 @@
             <line x1="12" y1="17" x2="12.01" y2="17"/>
           </svg>
           <p class="alert-txt">
-            <strong>Atenção:</strong> foram encontradas pastas em <code>secoes/</code> que <strong>não estão na lista oficial das 5 seções</strong> do template
-            (<code>introducao</code>, <code>fundamentacao_teorica</code>, <code>metodologia</code>, <code>resultados</code>, <code>consideracoes_finais</code>).
-            O script Python do professor pode penalizar seções extras, especialmente se a tabela ou lista estiver nelas.
+            Foram encontradas pastas em <code>secoes/</code> além das 5 seções oficiais
+            (<code>introducao</code>, <code>fundamentacao_teorica</code>, <code>metodologia</code>,
+            <code>resultados</code>, <code>consideracoes_finais</code>):
             <ul>
               ${r.secoesExtra.map(s => `<li><code>secoes/${escapeHtml(s.pasta)}/</code> → ${s.arquivos.map(a => '<code>' + escapeHtml(a) + '</code>').join(', ')}</li>`).join('')}
             </ul>
+            Esta é apenas uma observação — o documento oficial não menciona penalidade por seções extras.
+            Ainda assim, mantenha a estrutura próxima ao template fornecido em sala.
           </p>
-        </div>
-        <div class="info-box">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <circle cx="12" cy="12" r="10"/>
-            <line x1="12" y1="16" x2="12" y2="12"/>
-            <line x1="12" y1="8" x2="12.01" y2="8"/>
-          </svg>
-          <p class="info-txt">
-            <strong>Recomendação:</strong> mova qualquer tabela ou lista que esteja em uma seção extra para
-            uma das 5 seções oficiais (ex.: <code>resultados.tex</code>). Depois, remova a pasta extra do <code>.zip</code>
-            e remova o <code>\\input{secoes/&lt;extra&gt;/&lt;extra&gt;}</code> do <code>main.tex</code>. Isso evita desconto de 0,50 pt.
-          </p>
-        </div>
-      </section>`;
-    } else {
-      html += `<section class="block">
-        <div class="block-head">
-          <div class="block-title"><span class="block-num">04</span> Seções extras detectadas</div>
-          <div class="block-score full">✓ nenhuma</div>
-        </div>
-        <div class="rows-card">
-          ${row(true, 'Estrutura de secoes/ alinhada ao template oficial', 'Apenas as 5 seções oficiais foram encontradas. Nenhuma pasta extra dentro de secoes/.')}
         </div>
       </section>`;
     }
 
-    // BLOCO 05 — Defesa de Autoria
     html += `<section class="block">
       <div class="block-head">
-        <div class="block-title"><span class="block-num">05</span> Defesa de Autoria (presencial)</div>
-        <div class="block-score">${PONTOS_DEFESA.toFixed(2)} / ${PONTOS_DEFESA.toFixed(2)}</div>
-      </div>
-      <div class="rows-card">
-        ${row(true, 'Etapa não verificável por script',
-          'A Defesa de Autoria é realizada presencialmente e vale 2,50 pts. A IA gera 3 perguntas a partir de trechos extraídos do seu texto.')}
-        ${row(true, '3 perguntas geradas por IA',
-          'As perguntas são formuladas a partir do conteúdo que você escreveu no relatório.')}
-        ${row(true, 'Resposta correta = pontuação integral',
-          'A nota é atribuída pela consistência entre o que você escreveu e o que você responde.')}
-      </div>
-      <div class="info-box">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <circle cx="12" cy="12" r="10"/>
-          <line x1="12" y1="16" x2="12" y2="12"/>
-          <line x1="12" y1="8" x2="12.01" y2="8"/>
-        </svg>
-        <p class="info-txt">
-          <strong>Total da etapa LaTeX:</strong> 2,50 pts verificáveis por script + 2,50 pts de Defesa de Autoria = <strong>5,00 pts</strong>.
-          Esta ferramenta cobre apenas os 2,50 pts automatizáveis.
-        </p>
-      </div>
-    </section>`;
-
-    // BLOCO 06 — Checklist pré-envio
-    html += `<section class="block">
-      <div class="block-head">
-        <div class="block-title"><span class="block-num">06</span> Checklist pré-envio (SIGAA)</div>
+        <div class="block-title"><span class="block-num">${r.secoesExtra.length > 0 ? '05' : '04'}</span> Checklist pré-envio</div>
       </div>
       <div class="checklist">
         <h3 class="checklist-title">
@@ -2157,29 +2000,25 @@
           <li>Valide as figuras: use o bloco completo <code>\\begin{figure}...\\end{figure}</code> dentro dos arquivos <code>.tex</code> das seções.</li>
           <li>Formato final: gere o arquivo em <strong>.zip</strong> (não use <code>.rar</code>, <code>.7z</code> ou <code>.tar.gz</code>).</li>
           <li>O <code>.zip</code> deve conter <code>main.tex</code>, <code>secoes/</code>, <code>configuracao/</code> e a pasta de imagens (se houver).</li>
-          <li>Envie <strong>exclusivamente via SIGAA</strong> até <strong>27/09/2026 às 23:59</strong>. Não serão aceitos envios por e-mail/chat ou após o horário limite.</li>
-          <li>Mantenha o template <code>RELATÓRIO TÉCNICO - PROJETO INTEGRADOR - 2026.zip</code> como base — não altere o nome de <code>main.tex</code> nem a nomenclatura de <code>secoes/</code>.</li>
+          <li>Envie <strong>exclusivamente via SIGAA</strong> — não envie apenas o PDF final, e não use e-mail/chat.</li>
+          <li>Use como base o template <code>RELATÓRIO TÉCNICO - PROJETO INTEGRADOR - 2026.zip</code> — não altere o nome de <code>main.tex</code> nem a nomenclatura de <code>secoes/</code>.</li>
         </ul>
       </div>
     </section>`;
 
-    // FOOTER
     html += `<footer class="foot">
-      Ferramenta de conferência pré-envio — aplica os mesmos critérios do script Python de correção automatizada do professor.<br>
-      <strong>Disciplina:</strong> Projeto Integrador · <strong>Professor:</strong> Dr. Fábio de Oliveira Torres · <strong>IFPA Campus Marabá Industrial</strong>.<br>
-      <strong>Prazo:</strong> 27/09/2026, 23:59 · <strong>Envio:</strong> exclusivamente via SIGAA.<br>
-      Dúvidas: fórum da disciplina no SIGAA ou atendimento presencial no campus.
+      Ferramenta de conferência pré-envio — verifica os requisitos obrigatórios de estruturação LaTeX descritos no documento oficial da avaliação.<br>
+      <strong>Avaliação:</strong> 3º Bimestre - LaTeX · <strong>IFPA Campus Marabá Industrial</strong>.<br>
+      <strong>Envio:</strong> exclusivamente via SIGAA, em arquivo <code>.zip</code> contendo o código-fonte.<br>
+      Dúvidas: fórum de dúvidas da disciplina no SIGAA ou atendimento presencial com o professor.
     </footer>`;
 
     report.innerHTML = html;
     report.classList.add('show');
 
     requestAnimationFrame(() => {
-      document.querySelectorAll('.secao-bar-fill').forEach(el => {
-        el.style.width = el.getAttribute('data-pct') + '%';
-      });
       const fill = document.getElementById('summaryBarFill');
-      if (fill) fill.style.width = pctTotal + '%';
+      if (fill) fill.style.width = pct + '%';
     });
 
     document.getElementById('backBtn').addEventListener('click', () => {
@@ -2201,17 +2040,6 @@
   }
 
 })();
-</script>
-
-<div id="vlibras-widget" vw class="enabled">
-  <div vw-access-button class="active"></div>
-  <div vw-plugin-wrapper>
-    <div class="vw-plugin-top-wrapper"></div>
-  </div>
-</div>
-<script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
-<script>
-  new window.VLibras.Widget('https://vlibras.gov.br/app');
 </script>
 </body>
 </html>
